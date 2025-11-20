@@ -1,9 +1,13 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using FreshChoice.Presentation.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FreshChoice.Presentation.Controllers;
 
+[AllowAnonymous]
+[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
