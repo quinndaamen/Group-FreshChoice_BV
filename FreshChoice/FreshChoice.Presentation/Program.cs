@@ -1,4 +1,7 @@
 using FreshChoice.Data;
+using FreshChoice.Services;
+using FreshChoice.Services.Identity.Constants;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +12,46 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services
+            .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                options =>
+                {
+                    options.LoginPath = "/login";
+                    options.AccessDeniedPath = "/accessDenied";
+                    options.LogoutPath = "/logout";
+                });
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy(DefaultPolicies.AdminPolicy, policyBuilder =>
+            {
+                policyBuilder.RequireAuthenticatedUser();
+                policyBuilder.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme);
+                policyBuilder.RequireRole(DefaultRoles.Admin);
+            });
+
+            options.AddPolicy(DefaultPolicies.ManagerPolicy, policyBuilder =>
+            {
+                policyBuilder.RequireAuthenticatedUser();
+                policyBuilder.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme);
+                policyBuilder.RequireRole(DefaultRoles.Manager);
+            });
+
+            options.AddPolicy(DefaultPolicies.EmployeePolicy, policyBuilder =>
+            {
+                policyBuilder.RequireAuthenticatedUser();
+                policyBuilder.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme);
+                policyBuilder.RequireRole(DefaultRoles.Employee);
+            });
+        });
+        
+        builder.Services.AddRazorPages();
+        builder.Services.AddControllersWithViews();
+        builder.Services.AddData(builder.Configuration);
+        builder.Services.AddServices(builder.Configuration);
 
         var app = builder.Build();
 
@@ -27,6 +70,7 @@ public class Program
         app.UseHttpsRedirection();
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapStaticAssets();
