@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FreshChoice.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+23f2647e364be3f06b7253dd1b8fa11bff759478")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0172c094e81d92a07d10b9980456218519b10484")]
 [assembly: System.Reflection.AssemblyProductAttribute("FreshChoice.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FreshChoice.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
