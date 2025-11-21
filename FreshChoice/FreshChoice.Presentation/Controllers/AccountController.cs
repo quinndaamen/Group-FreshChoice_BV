@@ -14,13 +14,13 @@ namespace FreshChoice.Presentation.Controllers;
 [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public class AccountController : Controller
 {
-    private readonly UserManager<ApplicationUser> userManager;
-    private readonly SignInManager<ApplicationUser> signInManager;
+    private readonly UserManager<Employee> userManager;
+    private readonly SignInManager<Employee> signInManager;
     private readonly ILogger<AccountController> logger;
 
     public AccountController(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
+        UserManager<Employee> userManager,
+        SignInManager<Employee> signInManager,
         ILogger<AccountController> logger)
     {
         this.userManager = userManager;
@@ -196,7 +196,7 @@ public class AccountController : Controller
     }
 
     private async Task SignInAsync(
-        ApplicationUser user,
+        Employee user,
         bool rememberMe)
     {
         var claimsPrinciple = await this.signInManager
