@@ -9,7 +9,7 @@ namespace FreshChoice.Presentation;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +55,8 @@ public class Program
 
         var app = builder.Build();
 
+        await app.PrepareAsync();
+
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -66,6 +68,8 @@ public class Program
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
+
+        app.PrepareAsync();
 
         app.UseHttpsRedirection();
         app.UseRouting();
