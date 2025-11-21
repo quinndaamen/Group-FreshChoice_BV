@@ -9,7 +9,7 @@ public  static class DependencyInjection
 {
     public static IServiceCollection AddIdentityServices(this IServiceCollection services)
     {
-        services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+        services.AddIdentity<Employee, IdentityRole<Guid>>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.SignIn.RequireConfirmedEmail = false;

@@ -32,8 +32,8 @@ public static class AppPreparation
 
             if (!await dbContext.Users.AnyAsync())
             {
-                using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                var user = new ApplicationUser
+                using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Employee>>();
+                var user = new Employee
                 {
                     UserName = InitialAdminCredentials.AdminUsername,
                     Email = InitialAdminCredentials.AdminEmail,
