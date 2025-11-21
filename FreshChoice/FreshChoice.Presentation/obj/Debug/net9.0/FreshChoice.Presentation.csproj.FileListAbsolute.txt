@@ -880,3 +880,5 @@ C:\Users\Pamela\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Prese
 C:\Users\Pamela\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\FreshChoice.Presentation.pdb
 C:\Users\Pamela\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\FreshChoice.Presentation.genruntimeconfig.cache
 C:\Users\Pamela\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\ref\FreshChoice.Presentation.dll
+C:\Users\Pamela\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\bin\Debug\net9.0\Npgsql.dll
+C:\Users\Pamela\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

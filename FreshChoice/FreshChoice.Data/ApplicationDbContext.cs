@@ -12,5 +12,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     {
     }
     
-    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    public DbSet<Item> Items { get; set; }
 }
