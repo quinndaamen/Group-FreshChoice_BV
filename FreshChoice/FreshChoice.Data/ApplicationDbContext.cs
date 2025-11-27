@@ -13,6 +13,11 @@ public class ApplicationDbContext : IdentityDbContext<Employee, IdentityRole<Gui
     }
     
     public DbSet<Item> Items { get; set; }
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<Department> Departments { get; set; }
+    public DbSet<Shift> Shifts { get; set; }
+    public DbSet<EmployeeShift> EmployeeShifts { get; set; }
+    public DbSet<Announcement> Announcements { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -35,6 +40,7 @@ public class ApplicationDbContext : IdentityDbContext<Employee, IdentityRole<Gui
             .HasOne(es => es.Shift)
             .WithMany(s => s.EmployeeShifts)
             .HasForeignKey(es => es.ShiftId);
-    }
+        
+        modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly); }
 
 }
