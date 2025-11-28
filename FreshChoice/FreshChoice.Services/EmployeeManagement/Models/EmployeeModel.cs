@@ -1,4 +1,4 @@
-﻿using FreshChoice.Services.Shifts.Models;
+﻿using FreshChoice.Services.Shift.Models;
 
 namespace FreshChoice.Services.EmployeeManagement.Models;
 

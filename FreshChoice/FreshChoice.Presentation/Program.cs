@@ -4,8 +4,6 @@ using FreshChoice.Services.Identity.Constants;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using FreshChoice.Services.Item.Contracts;
-using FreshChoice.Services.Item.Internals;
 
 namespace FreshChoice.Presentation;
 
@@ -53,9 +51,7 @@ public class Program
         builder.Services.AddRazorPages();
         builder.Services.AddControllersWithViews();
         builder.Services.AddData(builder.Configuration);
-        builder.Services.AddServices(builder.Configuration);
-        builder.Services.AddControllersWithViews();
-        builder.Services.AddScoped<IItemService, ItemService>();
+        builder.Services.AddServices();
 
         var app = builder.Build();
 
@@ -73,7 +69,7 @@ public class Program
             app.UseHsts();
         }
 
-        app.PrepareAsync();
+        await app.PrepareAsync();
 
         app.UseHttpsRedirection();
         app.UseRouting();
@@ -89,6 +85,6 @@ public class Program
         app.MapRazorPages()
             .WithStaticAssets();
 
-        app.Run();
+        await app.RunAsync();
     }
 }
