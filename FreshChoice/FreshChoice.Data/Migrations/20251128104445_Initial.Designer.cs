@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FreshChoice.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251127142713_Initial")]
+    [Migration("20251128104445_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -47,23 +47,6 @@ namespace FreshChoice.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Announcements");
-                });
-
-            modelBuilder.Entity("FreshChoice.Data.Entities.Department", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("FreshChoice.Data.Entities.Employee", b =>
@@ -144,18 +127,16 @@ namespace FreshChoice.Data.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
-                    b.Property<long>("DepartmentId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("ShiftId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
 
-                    b.HasKey("EmployeeId", "DepartmentId", "ShiftId");
+                    b.Property<int>("Task")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasKey("EmployeeId", "ShiftId");
 
                     b.HasIndex("ShiftId");
 
@@ -196,8 +177,8 @@ namespace FreshChoice.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("DepartmentId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("Department")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
@@ -209,8 +190,6 @@ namespace FreshChoice.Data.Migrations
                         .HasColumnType("interval");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Shifts");
                 });
@@ -347,12 +326,6 @@ namespace FreshChoice.Data.Migrations
 
             modelBuilder.Entity("FreshChoice.Data.Entities.EmployeeShift", b =>
                 {
-                    b.HasOne("FreshChoice.Data.Entities.Department", "Task")
-                        .WithMany("EmployeeShifts")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("FreshChoice.Data.Entities.Employee", "Employee")
                         .WithMany("EmployeeShifts")
                         .HasForeignKey("EmployeeId")
@@ -368,17 +341,6 @@ namespace FreshChoice.Data.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("Shift");
-
-                    b.Navigation("Task");
-                });
-
-            modelBuilder.Entity("FreshChoice.Data.Entities.Shift", b =>
-                {
-                    b.HasOne("FreshChoice.Data.Entities.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
-
-                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -430,11 +392,6 @@ namespace FreshChoice.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("FreshChoice.Data.Entities.Department", b =>
-                {
-                    b.Navigation("EmployeeShifts");
                 });
 
             modelBuilder.Entity("FreshChoice.Data.Entities.Employee", b =>

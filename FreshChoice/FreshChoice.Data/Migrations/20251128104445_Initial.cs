@@ -69,19 +69,6 @@ namespace FreshChoice.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Departments",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Departments", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Items",
                 columns: table => new
                 {
@@ -94,6 +81,23 @@ namespace FreshChoice.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Items", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Shifts",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Department = table.Column<int>(type: "integer", nullable: true),
+                    TotalTime = table.Column<TimeSpan>(type: "interval", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Shifts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -203,49 +207,21 @@ namespace FreshChoice.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shifts",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DepartmentId = table.Column<long>(type: "bigint", nullable: true),
-                    TotalTime = table.Column<TimeSpan>(type: "interval", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Shifts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Shifts_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "EmployeeShifts",
                 columns: table => new
                 {
                     EmployeeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DepartmentId = table.Column<long>(type: "bigint", nullable: false),
                     ShiftId = table.Column<long>(type: "bigint", nullable: false),
+                    Task = table.Column<int>(type: "integer", nullable: false),
                     Id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeShifts", x => new { x.EmployeeId, x.DepartmentId, x.ShiftId });
+                    table.PrimaryKey("PK_EmployeeShifts", x => new { x.EmployeeId, x.ShiftId });
                     table.ForeignKey(
                         name: "FK_EmployeeShifts_AspNetUsers_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EmployeeShifts_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -294,19 +270,9 @@ namespace FreshChoice.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmployeeShifts_DepartmentId",
-                table: "EmployeeShifts",
-                column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_EmployeeShifts_ShiftId",
                 table: "EmployeeShifts",
                 column: "ShiftId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shifts_DepartmentId",
-                table: "Shifts",
-                column: "DepartmentId");
         }
 
         /// <inheritdoc />
@@ -344,9 +310,6 @@ namespace FreshChoice.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Shifts");
-
-            migrationBuilder.DropTable(
-                name: "Departments");
         }
     }
 }
