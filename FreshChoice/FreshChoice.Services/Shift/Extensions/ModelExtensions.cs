@@ -1,6 +1,6 @@
 ﻿using FreshChoice.Data.Entities;
 using FreshChoice.Services.EmployeeManagement.Models;
-using FreshChoice.Services.Shifts.Models;
+using FreshChoice.Services.Shift.Models;
 
 namespace FreshChoice.Services.Shift.Extensions;
 

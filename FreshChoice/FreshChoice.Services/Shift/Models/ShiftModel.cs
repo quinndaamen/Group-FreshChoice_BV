@@ -1,6 +1,6 @@
 ﻿using FreshChoice.Data;
 
-namespace FreshChoice.Services.Shifts.Models;
+namespace FreshChoice.Services.Shift.Models;
 
 public class ShiftModel
 {

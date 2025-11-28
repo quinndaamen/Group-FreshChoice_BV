@@ -3,7 +3,7 @@ using FreshChoice.Data;
 using FreshChoice.Services.EmployeeManagement.Contracts;
 using FreshChoice.Services.Shift.Contracts;
 using FreshChoice.Services.Shift.Extensions;
-using FreshChoice.Services.Shifts.Models;
+using FreshChoice.Services.Shift.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
