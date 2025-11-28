@@ -3,7 +3,6 @@
 public class EmployeeShift : Entity
 {
     public Guid EmployeeId { get; set; }
-    public long DepartmentId { get; set; }
     public long ShiftId { get; set; }
 
     // Navigation

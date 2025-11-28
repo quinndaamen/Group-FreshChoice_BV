@@ -14,17 +14,16 @@ public class ApplicationDbContext : IdentityDbContext<Employee, IdentityRole<Gui
     
     public DbSet<Item> Items { get; set; }
     public DbSet<Employee> Employees { get; set; }
-    public DbSet<Department> Departments { get; set; }
     public DbSet<Shift> Shifts { get; set; }
     public DbSet<EmployeeShift> EmployeeShifts { get; set; }
     public DbSet<Announcement> Announcements { get; set; }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<EmployeeShift>()
-            .HasKey(es => new { es.EmployeeId, es.DepartmentId, es.ShiftId });
+            .HasKey(es => new { es.EmployeeId, es.ShiftId });
 
         modelBuilder.Entity<EmployeeShift>()
             .HasOne(es => es.Employee)
@@ -32,15 +31,8 @@ public class ApplicationDbContext : IdentityDbContext<Employee, IdentityRole<Gui
             .HasForeignKey(es => es.EmployeeId);
 
         modelBuilder.Entity<EmployeeShift>()
-            .HasOne(es => es.Task)
-            .WithMany(t => t.EmployeeShifts)
-            .HasForeignKey(es => es.DepartmentId);
-
-        modelBuilder.Entity<EmployeeShift>()
             .HasOne(es => es.Shift)
             .WithMany(s => s.EmployeeShifts)
             .HasForeignKey(es => es.ShiftId);
-        
-        modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly); }
-
+    }
 }

@@ -1,4 +1,5 @@
-﻿using FreshChoice.Services.Identity;
+﻿using FreshChoice.Services.EmployeeManagement;
+using FreshChoice.Services.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,7 @@ public static class DependencyInjection
         ConfigurationManager builderConfiguration)
     {
         services.AddIdentityServices();
+        services.AddEmployeeManagementServices();
         
         return services;
     }
