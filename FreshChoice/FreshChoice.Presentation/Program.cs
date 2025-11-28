@@ -51,7 +51,7 @@ public class Program
         builder.Services.AddRazorPages();
         builder.Services.AddControllersWithViews();
         builder.Services.AddData(builder.Configuration);
-        builder.Services.AddServices(builder.Configuration);
+        builder.Services.AddServices();
 
         var app = builder.Build();
 
@@ -69,7 +69,7 @@ public class Program
             app.UseHsts();
         }
 
-        app.PrepareAsync();
+        await app.PrepareAsync();
 
         app.UseHttpsRedirection();
         app.UseRouting();
@@ -85,6 +85,6 @@ public class Program
         app.MapRazorPages()
             .WithStaticAssets();
 
-        app.Run();
+        await app.RunAsync();
     }
 }
