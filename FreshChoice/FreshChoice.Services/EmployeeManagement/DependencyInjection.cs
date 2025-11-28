@@ -1,4 +1,5 @@
-﻿using FreshChoice.Services.EmployeeManagement.Contracts;
+﻿using FreshChoice.Services.Announcement.Contracts;
+using FreshChoice.Services.EmployeeManagement.Contracts;
 using FreshChoice.Services.EmployeeManagement.Internals;
 using Microsoft.Extensions.DependencyInjection;
 

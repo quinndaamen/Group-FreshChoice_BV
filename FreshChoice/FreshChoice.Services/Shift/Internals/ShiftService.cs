@@ -12,9 +12,9 @@ namespace FreshChoice.Services.Shift.Internals;
 internal class ShiftService : IShiftService
 {
     private readonly ApplicationDbContext context;
-    private readonly Logger<ShiftService> logger;
+    private readonly ILogger<ShiftService> logger;
 
-    public ShiftService(ApplicationDbContext context, Logger<ShiftService> logger)
+    public ShiftService(ApplicationDbContext context, ILogger<ShiftService> logger)
     {
         this.context = context;
         this.logger = logger;

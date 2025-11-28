@@ -1,5 +1,7 @@
-﻿using FreshChoice.Services.EmployeeManagement;
+﻿using FreshChoice.Services.announcement;
+using FreshChoice.Services.EmployeeManagement;
 using FreshChoice.Services.Identity;
+using FreshChoice.Services.Item;
 using FreshChoice.Services.Shift;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,8 @@ public static class DependencyInjection
         services.AddIdentityServices();
         services.AddEmployeeManagementServices();
         services.AddShiftServices();
+        services.AddItemServices();
+        services.AddAnnouncementServices();
         
         return services;
     }

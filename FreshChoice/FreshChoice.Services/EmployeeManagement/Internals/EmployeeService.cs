@@ -1,6 +1,7 @@
 ﻿using Essentials.Results;
 using FreshChoice.Data;
 using FreshChoice.Data.Entities;
+using FreshChoice.Services.Announcement.Contracts;
 using FreshChoice.Services.EmployeeManagement.Contracts;
 using FreshChoice.Services.EmployeeManagement.Extensions;
 using FreshChoice.Services.EmployeeManagement.Models;
@@ -107,3 +108,4 @@ internal class EmployeeService : IEmployeeService
         }
     }
 }
+
