@@ -27,3 +27,4 @@ C:\Users\Pamela\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Data\
 C:\Users\Pamela\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Data\obj\Debug\net9.0\FreshChoice.Data.pdb
 C:\Users\Pamela\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Data\obj\Debug\net9.0\FreshChoice.Data.genruntimeconfig.cache
 C:\Users\Pamela\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Data\obj\Debug\net9.0\ref\FreshChoice.Data.dll
+C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Data\obj\Debug\net9.0\FreshChoice.Data.csproj.AssemblyReference.cache

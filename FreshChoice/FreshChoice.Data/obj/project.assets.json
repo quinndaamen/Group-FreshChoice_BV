@@ -5549,24 +5549,32 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Pamela\\.nuget\\packages\\": {}
+    "C:\\Users\\quinn\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Pamela\\RiderProjects\\Group-FreshChoice_BV\\FreshChoice\\FreshChoice.Data\\FreshChoice.Data.csproj",
+      "projectUniqueName": "C:\\Users\\quinn\\RiderProjects\\Group-FreshChoice_BV\\FreshChoice\\FreshChoice.Data\\FreshChoice.Data.csproj",
       "projectName": "FreshChoice.Data",
-      "projectPath": "C:\\Users\\Pamela\\RiderProjects\\Group-FreshChoice_BV\\FreshChoice\\FreshChoice.Data\\FreshChoice.Data.csproj",
-      "packagesPath": "C:\\Users\\Pamela\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Pamela\\RiderProjects\\Group-FreshChoice_BV\\FreshChoice\\FreshChoice.Data\\obj\\",
+      "projectPath": "C:\\Users\\quinn\\RiderProjects\\Group-FreshChoice_BV\\FreshChoice\\FreshChoice.Data\\FreshChoice.Data.csproj",
+      "packagesPath": "C:\\Users\\quinn\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\quinn\\RiderProjects\\Group-FreshChoice_BV\\FreshChoice\\FreshChoice.Data\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Pamela\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\quinn\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -5585,7 +5593,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -5646,7 +5654,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.307/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

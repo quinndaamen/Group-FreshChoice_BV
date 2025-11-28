@@ -26,6 +26,7 @@
 
     <ItemGroup>
       <Folder Include="EmployeeManagement\Contracts\" />
+      <Folder Include="EmployeeManagement\Extensions\" />
       <Folder Include="EmployeeManagement\Internals\" />
       <Folder Include="EmployeeManagement\Models\" />
     </ItemGroup>

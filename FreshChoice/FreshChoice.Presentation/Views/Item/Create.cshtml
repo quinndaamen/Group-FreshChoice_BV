@@ -1,0 +1,19 @@
+﻿@model FreshChoice.Services.Item.Models.ItemModel
+
+<h2>Create Item</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Name</label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label>Price</label>
+        <input asp-for="Price" />
+    </div>
+    <div>
+        <label>Quantity</label>
+        <input asp-for="Quantity" />
+    </div>
+    <button type="submit">Save</button>
+</form>

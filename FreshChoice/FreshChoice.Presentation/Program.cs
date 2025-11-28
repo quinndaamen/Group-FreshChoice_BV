@@ -4,6 +4,8 @@ using FreshChoice.Services.Identity.Constants;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using FreshChoice.Services.Item.Contracts;
+using FreshChoice.Services.Item.Internals;
 
 namespace FreshChoice.Presentation;
 
@@ -52,6 +54,8 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddData(builder.Configuration);
         builder.Services.AddServices(builder.Configuration);
+        builder.Services.AddControllersWithViews();
+        builder.Services.AddScoped<IItemService, ItemService>();
 
         var app = builder.Build();
 
