@@ -1,28 +1,37 @@
-﻿@using FreshChoice.Data.Entities
+@using FreshChoice.Data.Entities
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
 
-<ul class="navbar-nav">
+<div class="dropdown">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a class="nav-link" asp-controller="Account" asp-action="Manage" title="Manage">
-                Hello @User.Identity?.Name!
-            </a>
-        </li>
-        <li class="nav-item">
-            <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
-                <button type="submit" class="nav-link" style="background: none; border: none; cursor: pointer;">
-                    Logout
-                </button>
+
+        <a style="    font-size: 20px;
+        color: white;
+        text-decoration: none;" asp-controller="Account" asp-action="Manage" title="Manage"> @User.Identity?.Name <it class="bi bi-person-circle"></it></a>
+        <div class="dropdown-content-right">
+            <form asp-controller="Account" asp-action="Logout" method="post" ">
+                 <button type="submit" class="dropdown-button"  >
+                     <i class="bi bi-box-arrow-right"></i>
+                     Logout
+                 </button>
             </form>
-        </li>
+        
+        <a href="#"><i class="bi bi-pencil-square"></i> Edit user</a>
+        <a href="#"><i class="bi bi-question-circle"></i> Help</a>
+        </div>
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
-        </li>
+        <a><it class="bi bi-person-circle"></it></a>
+        <div class="dropdown-content-right">
+            <div class="Login">
+                <a class="Login" style="text-decoration:none; color:black;" asp-controller="Account" asp-action="Login">
+                    <div class ="Text"> <i class="bi bi-box-arrow-in-right"></i>Login</div>
+				</a>
+			</div>
+            <a href="#"><i class="bi bi-question-circle"></i> Help</a>
+        </div>
     }
-</ul>
+</div>
