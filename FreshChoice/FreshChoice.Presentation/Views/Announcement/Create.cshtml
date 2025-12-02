@@ -1,0 +1,23 @@
+﻿@model FreshChoice.Services.Announcement.Models.AnnouncementModel
+
+<h2>Create Announcement</h2>
+
+<form asp-action="Create" method="post">
+
+    <div>
+        <label>Name</label>
+        <input asp-for="Name" />
+    </div>
+
+    <div>
+        <label>Date</label>
+        <input asp-for="Date" type="date" />
+    </div>
+
+    <div>
+        <label>Text</label>
+        <textarea asp-for="Text"></textarea>
+    </div>
+
+    <button type="submit">Save</button>
+</form>

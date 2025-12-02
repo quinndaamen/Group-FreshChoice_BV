@@ -1,10 +1,123 @@
-﻿@{
-    ViewData["Title"] = "Landing page:)";
-}
+﻿@using FreshChoice.Data.Entities
+@model IEnumerable<FreshChoice.Data.Entities.Announcement>
+
+
 @{
-    int groupnumber = 1;
+    ViewData["Title"] = "Home Page";
 }
-<div class="text-center">
-    <h1 class="display-4">Home Screen</h1>
-    
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; font-family: Arial, sans-serif;">
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #E0E0E0;">
+        <!-- Logo with Dropdown -->
+        <div style="position: relative; display: inline-block;" id="logoContainer">
+            <div style="font-size: 28px; font-weight: bold; color: #2E7D32; cursor: pointer;">
+                FreshChoice
+            </div>
+            
+            <!-- Dropdown Menu -->
+            <div style="position: absolute; top: 100%; left: 0; margin-top: 8px; min-width: 200px; background: white; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); border: 1px solid #E0E0E0; display: none; z-index: 1000;" id="dropdownMenu">
+                <a href="#" style="display: block; padding: 14px 20px; text-decoration: none; color: #333333; border-bottom: 1px solid #E0E0E0;">Inventory</a>
+                <a href="#" style="display: block; padding: 14px 20px; text-decoration: none; color: #333333; border-bottom: 1px solid #E0E0E0;">Schedule</a>
+                <a href="#" style="display: block; padding: 14px 20px; text-decoration: none; color: #333333;">Employee Management</a>
+            </div>
+        </div>
+
+        
+    </div>
+
+    <!-- Announcements Section -->
+    <div style="margin-bottom: 32px;">
+        <h1 style="color: #333333; font-size: 28px; font-weight: 700; margin-bottom: 8px;">Announcements</h1>
+        <p style="color: #666666; font-size: 16px;">Recent company updates</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        @foreach (var ann in Model)
+        {
+            <div style="background: white; border: 1px solid #E0E0E0; border-radius: 8px; padding: 24px;">
+                <div style="color: #2E7D32; font-size: 14px; font-weight: 600; margin-bottom: 8px;">
+                    @ann.Date.ToString("MMM dd, yyyy")
+                </div>
+
+                <h3 style="color: #333333; font-size: 20px; font-weight: 700; margin-bottom: 12px;">
+                    @ann.Name
+                </h3>
+
+                <p style="color: #666666; font-size: 15px; line-height: 1.6;">
+                    @ann.Text
+                </p>
+            </div>
+        }
+    </div>
+
+
+
+
+
+        
+
+    <!-- Create New Announcement Button -->
+    <a href="/Announcement/Create">
+        <button style="background: #2E7D32; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer;">
+            Create New Announcement
+        </button>
+    </a>
+
+
+    <!-- Additional Announcement -->
+    <div style="background: white; border: 1px solid #E0E0E0; border-radius: 8px; padding: 24px; margin-top: 32px;">
+        <div style="color: #2E7D32; font-size: 14px; font-weight: 600; margin-bottom: 8px;">Oct 30, 2025</div>
+        <h3 style="color: #333333; font-size: 20px; font-weight: 700; margin-bottom: 12px;">New Product Lines Available</h3>
+        <p style="color: #666666; font-size: 15px; line-height: 1.6;">
+            We're excited to introduce our new organic and locally-sourced product lines in all departments.
+        </p>
+    </div>
 </div>
+
+<script>
+    // Simple JavaScript for logo dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the logo container and dropdown
+        const logoContainer = document.getElementById('logoContainer');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        // Show dropdown when mouse enters logo container
+        logoContainer.addEventListener('mouseenter', function() {
+            dropdownMenu.style.display = 'block';
+        });
+        
+        // Hide dropdown when mouse leaves logo container
+        logoContainer.addEventListener('mouseleave', function() {
+            dropdownMenu.style.display = 'none';
+        });
+        
+        // Simple click handlers for dropdown links
+        const dropdownLinks = dropdownMenu.querySelectorAll('a');
+        dropdownLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const pageName = this.textContent;
+                alert('Navigating to: ' + pageName);
+            });
+        });
+        
+        // Login button
+        const loginButton = document.querySelector('button[style*="background: none"]');
+        if (loginButton) {
+            loginButton.addEventListener('click', function() {
+                alert('Opening login page...');
+            });
+        }
+        
+        // Create New Announcement button
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent === 'Create New Announcement') {
+                button.addEventListener('click', function() {
+                    alert('Opening form to create new announcement...');
+                });
+            }
+        });
+    });
+</script>
