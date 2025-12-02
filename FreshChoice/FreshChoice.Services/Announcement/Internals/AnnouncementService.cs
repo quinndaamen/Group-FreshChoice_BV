@@ -7,102 +7,107 @@ using FreshChoice.Services.Announcement.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace FreshChoice.Services.Announcement.Internals;
-
-internal class AnnouncementService : IAnnouncementService
+namespace FreshChoice.Services.Announcement.Internals
 {
-    private readonly ApplicationDbContext _context;
-    private readonly ILogger<AnnouncementService> _logger;
-
-    public AnnouncementService(ApplicationDbContext context, ILogger<AnnouncementService> logger)
+    public class AnnouncementService : IAnnouncementService
     {
-        _context = context;
-        _logger = logger;
-    }
-    
+        private readonly ApplicationDbContext _context;
+        private readonly ILogger<AnnouncementService> _logger;
 
-    // Interface method implementation
-    public async Task<IEnumerable<AnnouncementModel>> GetAllAnnouncementAsync() =>
-        await _context
-            .Announcements
-            .AsNoTracking()
-            .Select(x => x.ToModel())
-            .ToListAsync();
-
-    public Task<AnnouncementModel?> GetAnnouncementByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<AnnouncementModel?> GetAnnouncementByIdAsync(long announcementId) =>
-        await _context
-            .Announcements
-            .Where(x => x.Id == announcementId)
-            .Select(x => x.ToModel())
-            .FirstOrDefaultAsync();
-
-    public async Task<MutationResult> UpdateAnnouncementAsync(AnnouncementModel announcement)
-    {
-        try
+        public AnnouncementService(ApplicationDbContext context, ILogger<AnnouncementService> logger)
         {
-            var entity = await _context.Announcements.FindAsync(announcement.Id);
-            if (entity == null)
-                return MutationResult.ResultFrom(null, "AnnouncementNotFound");
-
-            entity.Name = announcement.Name;
-            entity.Date = announcement.Date;
-            entity.Text = announcement.Text;
-
-            await _context.SaveChangesAsync();
-            return MutationResult.ResultFrom(entity, "AnnouncementUpdated");
+            _context = context;
+            _logger = logger;
         }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error updating announcement");
-            return MutationResult.ResultFrom(e);
-        }
-    }
 
-    public async Task<MutationResult> CreateAnnouncementAsync(AnnouncementModel announcement)
-    {
-        try
+        // Get all announcements
+        public async Task<IEnumerable<AnnouncementModel>> GetAllAnnouncementAsync() =>
+            await _context.Announcements
+                .AsNoTracking()
+                .Select(x => x.ToModel())
+                .ToListAsync();
+
+        // Get by long ID
+        public async Task<AnnouncementModel?> GetAnnouncementByIdAsync(long announcementId) =>
+            await _context.Announcements
+                .Where(x => x.Id == announcementId)
+                .Select(x => x.ToModel())
+                .FirstOrDefaultAsync();
+
+        // Get by GUID ID (if needed)
+        public Task<AnnouncementModel?> GetAnnouncementByIdAsync(Guid id)
         {
-            var entity = new Data.Entities.Announcement
+            throw new NotImplementedException();
+        }
+
+        // Create announcement
+        public async Task<MutationResult> CreateAnnouncementAsync(AnnouncementModel announcement)
+        {
+            try
             {
-                Name = announcement.Name,
-                Date = announcement.Date,
-                Text = announcement.Text
-            };
+                var entity = new Data.Entities.Announcement
+                {
+                    Name = announcement.Name,
+                    Text = announcement.Text,
+                    Date = announcement.Date == default
+                        ? DateTime.UtcNow
+                        : DateTime.SpecifyKind(announcement.Date, DateTimeKind.Utc)
+                };
 
-            _context.Announcements.Add(entity);
-            await _context.SaveChangesAsync();
+                _context.Announcements.Add(entity);
+                await _context.SaveChangesAsync();
 
-            return MutationResult.ResultFrom(entity, "AnnouncementCreated");
+                return MutationResult.ResultFrom(entity, "AnnouncementCreated");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error creating announcement");
+                return MutationResult.ResultFrom(e);
+            }
         }
-        catch (Exception e)
+
+        // Update announcement
+        public async Task<MutationResult> UpdateAnnouncementAsync(AnnouncementModel announcement)
         {
-            _logger.LogError(e, "Error creating announcement");
-            return MutationResult.ResultFrom(e);
+            try
+            {
+                var entity = await _context.Announcements.FindAsync(announcement.Id);
+                if (entity == null)
+                    return MutationResult.ResultFrom(null, "AnnouncementNotFound");
+
+                entity.Name = announcement.Name;
+                entity.Text = announcement.Text;
+                entity.Date = DateTime.SpecifyKind(announcement.Date, DateTimeKind.Utc);
+
+                await _context.SaveChangesAsync();
+                return MutationResult.ResultFrom(entity, "AnnouncementUpdated");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error updating announcement");
+                return MutationResult.ResultFrom(e);
+            }
         }
-    }
 
-    public async Task<StandardResult> DeleteAnnouncementAsync(Guid announcementId)
-    {
-        try
+        // Delete announcement
+        public async Task<StandardResult> DeleteAnnouncementAsync(Guid announcementId)
         {
-            var entity = await _context.Announcements.FindAsync(announcementId);
-            if (entity == null)
-                return StandardResult.UnsuccessfulResult("AnnouncementNotFound");
+            try
+            {
+                var entity = await _context.Announcements.FindAsync(announcementId);
+                if (entity == null)
+                    return StandardResult.UnsuccessfulResult("AnnouncementNotFound");
 
-            _context.Announcements.Remove(entity);
-            await _context.SaveChangesAsync();
+                _context.Announcements.Remove(entity);
+                await _context.SaveChangesAsync();
 
-            return StandardResult.SuccessfulResult();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error deleting announcement");
-            return StandardResult.UnsuccessfulResult("ErrorDeletingAnnouncement");
+                return StandardResult.SuccessfulResult();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error deleting announcement");
+                return StandardResult.UnsuccessfulResult("ErrorDeletingAnnouncement");
+            }
         }
     }
 }

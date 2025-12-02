@@ -1,9 +1,12 @@
 using FreshChoice.Data;
 using FreshChoice.Services;
+using FreshChoice.Services.Announcement.Contracts;
 using FreshChoice.Services.Identity.Constants;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using FreshChoice.Services.Announcement.Contracts;
+using FreshChoice.Services.Announcement.Internals;
 
 namespace FreshChoice.Presentation;
 
@@ -52,6 +55,8 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddData(builder.Configuration);
         builder.Services.AddServices();
+        builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
+
 
         var app = builder.Build();
 
