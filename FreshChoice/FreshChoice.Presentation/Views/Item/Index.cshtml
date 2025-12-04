@@ -1,59 +1,61 @@
 @model IEnumerable<FreshChoice.Services.Item.Models.ItemModel>
 @using FreshChoice.Presentation.Views.Item
-@inject placeholder test
+@inject Placeholder test
 
 
 <body>
     <div class="container">
         <div class="text">
             <h2>Inventory management</h2>
-			<p>Manage stocks</p>
-		</div>
-        <div class="con-button">
-			<button class="addbutton"><i class="bi bi-box-seam"> Add Products</i></button>
+            <p>Manage stocks</p>
         </div>
-	</div>
+        <div class="con-button">
+            <a asp-action="Create">
+                <div class="addbutton"><i class="bi bi-box-seam"> Add Products</i></div>
+            </a>
+        </div>
+    </div>
 
     <div class="warning-label">
         @if (test.stock == true)
         {
             <div class="good">
-			    <h3>stock levels good</h3>
-		    </div>
+                <h3>stock levels good</h3>
+            </div>
         }
         else
         {
             <div class="bad">
-            <h3>low stock allert</h3>
-			    <p>@($"{test.products_low} products running low on stock") </p>
-		    </div>
+                <h3>low stock allert</h3>
+                <p>@($"{test.products_low} products running low on stock") </p>
+            </div>
         }
 
     </div>
 
     <div class="container2">
-        <div class="search" >
-            <!--add searchbar logic-->
+        <div class="search">
+            <!--add searchbar logic--><div>searchbar W.I.P</div>
         </div>
         <div class="filter">
-            <!--dropdown filter here-->
+            <!--dropdown filter here--><div>filter (WIP)</div>
         </div>
     </div>
 
-    
 
 
-    <a asp-action="Create">Create New</a>
+
+
     <table>
         <tr>
             <th>SKU</th>
             <th>Product name</th>
             <th>Category</th>
-		    <th>Quantity</th>
-		    <th>Price</th>
+            <th>Quantity</th>
+            <th>Price</th>
             <th>Actions</th>
         </tr>
-        @foreach(var item in Model)
+        @foreach (var item in Model)
         {
             <tr>
                 <td><!--add@SKU.Sku-->W.I.P</td>
@@ -62,10 +64,10 @@
                 <td>@item.Price</td>
                 <td>@item.Quantity</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a> |
+                    <a asp-action="Details" asp-route-id="@item.Id"><s>Details</s></a> |
                     <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
-                        <button type="submit">Delete</button>
+                        <button type="submit"><f class="bi bi-trash"></f></button>
                     </form>
                 </td>
             </tr>

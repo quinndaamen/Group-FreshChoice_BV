@@ -1,12 +1,13 @@
 using FreshChoice.Data;
+using FreshChoice.Presentation.Views.Item;
 using FreshChoice.Services;
 using FreshChoice.Services.Announcement.Contracts;
+using FreshChoice.Services.Announcement.Contracts;
+using FreshChoice.Services.Announcement.Internals;
 using FreshChoice.Services.Identity.Constants;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using FreshChoice.Services.Announcement.Contracts;
-using FreshChoice.Services.Announcement.Internals;
 
 namespace FreshChoice.Presentation;
 
@@ -56,6 +57,7 @@ public class Program
         builder.Services.AddData(builder.Configuration);
         builder.Services.AddServices();
         builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
+        builder.Services.AddTransient<Placeholder>();
 
 
         var app = builder.Build();

@@ -2,10 +2,8 @@
 
 namespace FreshChoice.Presentation.Views.Item;
 
-public class Index : PageModel
+public class Placeholder : PageModel
 {
-    public void OnGet()
-    {
-        
-    }
+    public bool stock = false;
+    public int products_low = 2;
 }
