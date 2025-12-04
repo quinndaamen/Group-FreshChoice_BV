@@ -1,0 +1,96 @@
+body {
+    margin:20px;
+}
+
+.container {
+    display: flex;
+}
+
+    .container .text {
+        text-align: left;
+        float: left;
+        margin-left: 5%
+    }
+    .container .con-button {
+        float:right;
+        margin-right: 5%
+    }
+
+    .addbutton {
+        background-color: black;
+        color: white;
+        text-decoration: none;
+        border: 1px solid black;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .addbutton:hover {
+        background-color: #212121;
+        color: white;
+        text-decoration: none;
+        border: 1px solid black;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+
+
+.warning-label {
+    color:black;
+    border: 2px solid #484848;
+    border-radius: 10px;
+    margin-left: 5%;
+    margin-right:5%;
+
+}
+    .warning-label .good {
+        background-color: lawngreen;
+        padding: 5px;
+    }
+
+    .warning-label .bad {
+        background-color: darkorange;
+        padding:5px;
+    }
+
+.container2 {
+    display: flex;
+}
+
+    .container2 .search {
+        float: left;
+        margin-left: 5%;
+        background-color: lightgray;
+        border-radius: 5px;
+        border: 1px solid lightgray;
+        width: 100px;
+        padding:5px;
+    }
+    .container2 .filter {
+        float: right;   
+        margin-right: 5%;
+        background-color: lightgray;
+        border-radius: 5px;
+        border: 1px solid lightgray;
+        width:100px;
+        padding:5px;
+    }
+
+table {
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: 1px solid gray;
+}
+
+    table th {
+        text-align: center;
+        padding: 10px;
+        background-color: #ababab;
+        border-bottom:1px solid gray;
+    }
+    table td {
+        border-bottom: 1px solid gray;
+
+    }
