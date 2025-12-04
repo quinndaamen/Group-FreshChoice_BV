@@ -1,8 +1,16 @@
-# Rider project files
+############################
+# JetBrains Rider
+############################
 .idea/
 *.sln.iml
-*.ipr
-*.iws
+
+# Rider plugin caches
+.idea_modules/
+*.rider/
+
+############################
+# Visual Studio / .NET
+############################
 
 # User-specific files
 *.user
@@ -10,40 +18,85 @@
 *.userosscache
 *.sln.docstates
 
-# Rider caches
-out/
-.idea_modules/
-.idea/.idea.*
-.idea/.name
-
 # Build results
-bin/
-obj/
-[Bb]uild/
 [Dd]ebug/
 [Rr]elease/
+[Rr]eleases/
 x64/
 x86/
-*.ilk
-*.meta
-*.pdb
-*.exe
-*.dll
-*.app
-*.log
-
-# Unity specific (if using Unity)
-[Ll]ibrary/
-[Tt]emp/
+[Aa][Rr][Mm]/
+arm64/
+bld/
+[Bb]in/
 [Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
-MemoryCaptures/
-*.pidb
-*.unityproj
-*.booproj
-*.svd
+msbuild.log
+msbuild.err
+msbuild.wrn
 
-# Rider plugin specific
-*.rider/
+# Generated files
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+*.mdb
+*.bak
+*.db
+*.db-shm
+*.db-wal
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+*.nuspec
+*.psmdcp
+.nuget/
+
+# Entity Framework
+Migrations/obj/
+*.jfm
+
+# ASP.NET publish
+wwwroot/
+**/wwwroot/*
+.publish/
+*.pubxml
+*.pubxml.user
+
+# Roslyn
+*.ide/
+
+############################
+# OS-specific
+############################
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+__MACOSX/
+
+############################
+# Logs
+############################
+*.log
+logs/
+*.svclog
+*.scc
+
+############################
+# Optional - remove if needed
+############################
+
+# DotCover
+*.dotCover
+
+# Rider local history
+.idea/.history/
