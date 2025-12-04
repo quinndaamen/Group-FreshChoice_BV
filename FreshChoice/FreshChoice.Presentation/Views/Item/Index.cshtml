@@ -1,27 +1,74 @@
-﻿@model IEnumerable<FreshChoice.Services.Item.Models.ItemModel>
+@model IEnumerable<FreshChoice.Services.Item.Models.ItemModel>
+@using FreshChoice.Presentation.Views.Item
+@inject placeholder test
 
-<h2>Items</h2>
-<a asp-action="Create">Create New</a>
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Actions</th>
-    </tr>
-    @foreach(var item in Model)
-    {
+
+<body>
+    <div class="container">
+        <div class="text">
+            <h2>Inventory management</h2>
+			<p>Manage stocks</p>
+		</div>
+        <div class="con-button">
+			<button class="addbutton"><i class="bi bi-box-seam"> Add Products</i></button>
+        </div>
+	</div>
+
+    <div class="warning-label">
+        @if (test.stock == true)
+        {
+            <div class="good">
+			    <h3>stock levels good</h3>
+		    </div>
+        }
+        else
+        {
+            <div class="bad">
+            <h3>low stock allert</h3>
+			    <p>@($"{test.products_low} products running low on stock") </p>
+		    </div>
+        }
+
+    </div>
+
+    <div class="container2">
+        <div class="search" >
+            <!--add searchbar logic-->
+        </div>
+        <div class="filter">
+            <!--dropdown filter here-->
+        </div>
+    </div>
+
+    
+
+
+    <a asp-action="Create">Create New</a>
+    <table>
         <tr>
-            <td>@item.Name</td>
-            <td>@item.Price</td>
-            <td>@item.Quantity</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
+            <th>SKU</th>
+            <th>Product name</th>
+            <th>Category</th>
+		    <th>Quantity</th>
+		    <th>Price</th>
+            <th>Actions</th>
         </tr>
-    }
-</table>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td><!--add@SKU.Sku-->W.I.P</td>
+                <td>@item.Name</td>
+                <td><!--add@Category.category-->W.I.P</td>
+                <td>@item.Price</td>
+                <td>@item.Quantity</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+</body>
