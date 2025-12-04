@@ -1,10 +1,10 @@
 ﻿using Essentials.Results;
 using FreshChoice.Data;
 using FreshChoice.Data.Entities;
-using FreshChoice.Services.Announcement.Contracts;
 using FreshChoice.Services.EmployeeManagement.Contracts;
 using FreshChoice.Services.EmployeeManagement.Extensions;
 using FreshChoice.Services.EmployeeManagement.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -12,99 +12,114 @@ namespace FreshChoice.Services.EmployeeManagement.Internals;
 
 internal class EmployeeService : IEmployeeService
 {
-    private readonly ApplicationDbContext context;
-    private readonly ILogger<EmployeeService> logger;
+    private readonly ApplicationDbContext _context;
+    private readonly ILogger<EmployeeService> _logger;
+    private readonly UserManager<Employee> _userManager;
 
-    public EmployeeService(ApplicationDbContext context, ILogger<EmployeeService> logger)
+    public EmployeeService(
+        ApplicationDbContext context,
+        ILogger<EmployeeService> logger,
+        UserManager<Employee> userManager)
     {
-        this.context = context;
-        this.logger = logger;
+        _context = context;
+        _logger = logger;
+        _userManager = userManager;
     }
 
+    // ---------------- GET ALL ----------------
     public async Task<IEnumerable<EmployeeModel>> GetAllEmployeesAsync() =>
-        await this.context
-            .Employees
-            .Include(x => x.EmployeeShifts)
+        await _context.Employees
+            .Include(e => e.EmployeeShifts)
             .AsNoTracking()
-            .Select(x => x.ToModel())
+            .Select(e => e.ToModel())
             .ToListAsync();
 
-
+    // ---------------- GET BY ID ----------------
     public async Task<EmployeeModel?> GetEmployeeByIdAsync(Guid employeeId) =>
-        await this.context
-            .Employees
-            .Include(x => x.EmployeeShifts)
-            .Where(x => x.Id == employeeId)
-            .Select(x => x.ToModel())
+        await _context.Employees
+            .Include(e => e.EmployeeShifts)
+            .Where(e => e.Id == employeeId)
+            .Select(e => e.ToModel())
             .FirstOrDefaultAsync();
 
-    public async Task<MutationResult> UpdateEmployeeAsync(EmployeeModel employee)
-    {
-        try
-        {
-            var employeeEntity = await this.context.Employees.FindAsync(employee.Id);
-
-            if (employeeEntity == null)
-            {
-                return MutationResult.ResultFrom(null, "EmployeeNotFound");
-            }
-            
-            employeeEntity.FirstName = employee.FirstName;
-            employeeEntity.LastName = employee.LastName;
-            employeeEntity.Email = employee.Email;
-            
-            await this.context.SaveChangesAsync();
-            return MutationResult.ResultFrom(employeeEntity, "EmployeeUpdated");
-        }
-        catch (Exception e)
-        {
-            this.logger.LogError(e, "Error updating employee");
-            return MutationResult.ResultFrom(e);
-        }
-    }
-
+    // ---------------- CREATE ----------------
     public async Task<MutationResult> CreateEmployeeAsync(EmployeeModel employee)
     {
         try
         {
-            var employeeEntity = new Employee()
+            var newEmployee = new Employee
             {
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Email = employee.Email,
+                UserName = employee.Email,
+                NormalizedEmail = employee.Email.ToUpper(),
+                NormalizedUserName = employee.Email.ToUpper()
             };
-            
-            this.context.Employees.Add(employeeEntity);
-            await this.context.SaveChangesAsync();
-            
-            return MutationResult.ResultFrom(employeeEntity, "EmployeeCreated");
+
+            var result = await _userManager.CreateAsync(newEmployee);
+
+            if (result.Succeeded)
+                return MutationResult.ResultFrom(newEmployee, "EmployeeCreated");
+
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            return MutationResult.ResultFrom(new Exception(errors));
         }
         catch (Exception e)
         {
-            this.logger.LogError(e, "Error creating employee");
+            _logger.LogError(e, "Error creating employee");
             return MutationResult.ResultFrom(e);
         }
     }
 
+    // ---------------- UPDATE ----------------
+    public async Task<MutationResult> UpdateEmployeeAsync(EmployeeModel employee)
+    {
+        try
+        {
+            var existing = await _context.Employees.FindAsync(employee.Id);
+            if (existing == null)
+                return MutationResult.ResultFrom(null, "EmployeeNotFound");
+
+            existing.FirstName = employee.FirstName;
+            existing.LastName = employee.LastName;
+            existing.Email = employee.Email;
+            existing.UserName = employee.Email;
+            existing.NormalizedEmail = employee.Email.ToUpper();
+            existing.NormalizedUserName = employee.Email.ToUpper();
+
+            await _context.SaveChangesAsync();
+            return MutationResult.ResultFrom(existing, "EmployeeUpdated");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error updating employee");
+            return MutationResult.ResultFrom(e);
+        }
+    }
+
+    // ---------------- DELETE ----------------
     public async Task<StandardResult> DeleteEmployeeAsync(Guid employeeId)
     {
         try
         {
-            var employeeEntity = await this.context.Employees.FindAsync(employeeId);
-            if (employeeEntity == null)
-            {
+            var employee = await _context.Employees.FindAsync(employeeId);
+            if (employee == null)
                 return StandardResult.UnsuccessfulResult("EmployeeNotFound");
-            }
-            
-            this.context.Employees.Remove(employeeEntity);
-            await this.context.SaveChangesAsync();
-            
-            return StandardResult.SuccessfulResult();
+
+            // Remove employee using UserManager to handle Identity properly
+            var result = await _userManager.DeleteAsync(employee);
+            if (result.Succeeded)
+                return StandardResult.SuccessfulResult();
+
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            _logger.LogError("Error deleting employee: {errors}", errors);
+            return StandardResult.UnsuccessfulResult(errors);
         }
         catch (Exception e)
         {
-            this.logger.LogError(e, "Error deleting employee");
-            return StandardResult.UnsuccessfulResult("EmployeeNotFound");
+            _logger.LogError(e, "Error deleting employee");
+            return StandardResult.UnsuccessfulResult("EmployeeDeleteFailed");
         }
     }
 }

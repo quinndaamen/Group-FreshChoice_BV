@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FreshChoice.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5afdfc8c4558ed515a845d8e6ed3b07f021ee7f3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+55b40df8f99058b7d3b11a941709f358e181a932")]
 [assembly: System.Reflection.AssemblyProductAttribute("FreshChoice.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FreshChoice.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

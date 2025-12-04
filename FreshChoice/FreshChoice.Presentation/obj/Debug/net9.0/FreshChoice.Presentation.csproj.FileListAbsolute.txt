@@ -884,6 +884,7 @@ C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presen
 C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\compressed\82lyayvscs-{0}-9vr69e8ynj-9vr69e8ynj.gz
 C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\compressed\zov3vn66lu-{0}-87fc7y1x7t-87fc7y1x7t.gz
 C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\compressed\6r1kqwfpr5-{0}-mlv21k5csn-mlv21k5csn.gz
-C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\compressed\whik5unsuz-{0}-upxy9kgrn6-upxy9kgrn6.gz
-C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\compressed\7f3xyglww1-{0}-upxy9kgrn6-upxy9kgrn6.gz
 C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\swae.build.ex.cache
+C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\scopedcss\Views\Shared\_LoginPartial.cshtml.rz.scp.css
+C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\compressed\whik5unsuz-{0}-1c2cgmxfke-1c2cgmxfke.gz
+C:\Users\quinn\RiderProjects\Group-FreshChoice_BV\FreshChoice\FreshChoice.Presentation\obj\Debug\net9.0\compressed\7f3xyglww1-{0}-1c2cgmxfke-1c2cgmxfke.gz

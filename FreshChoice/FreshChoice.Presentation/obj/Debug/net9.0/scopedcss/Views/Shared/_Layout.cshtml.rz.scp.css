@@ -1,43 +1,107 @@
 /* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
-a.navbar-brand[b-klhp4bherr] {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+header[b-klhp4bherr] {
+    font: Arimo;
 }
 
-a[b-klhp4bherr] {
-  color: #0077cc;
+.top-navbar[b-klhp4bherr] {
+    list-style-type: none;
+    background-color: black;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    width: 100%;
+    overflow: visible;
+    top:0;
 }
 
-.btn-primary[b-klhp4bherr] {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+
+tbl[b-klhp4bherr] {
+    float: left;
+    padding-left:10px;
+    padding-right:10px;
 }
 
-.nav-pills .nav-link.active[b-klhp4bherr], .nav-pills .show > .nav-link[b-klhp4bherr] {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+tbl:hover .dropdown-content-left[b-klhp4bherr] {
+    display: block;
 }
 
-.border-top[b-klhp4bherr] {
-  border-top: 1px solid #e5e5e5;
+tbr[b-klhp4bherr] {
+    float: right;
 }
-.border-bottom[b-klhp4bherr] {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow[b-klhp4bherr] {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+tbr:hover .dropdown-content-right[b-klhp4bherr] {
+    display: block;
 }
 
-button.accept-policy[b-klhp4bherr] {
-  font-size: 1rem;
-  line-height: inherit;
+
+i[b-klhp4bherr] {
+    padding-right: 5px;
 }
+it[b-klhp4bherr] {
+    padding-right: 3px;
+    font-size: 50px;
+    color:white;
+
+}
+
+
+
+
+
+
+
+
+
+
+.dropdown-content-right[b-klhp4bherr] {
+    display: none;
+    position: absolute;
+    right: 0;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    background-color: snow;
+}
+
+    .dropdown-content-right a[b-klhp4bherr] {
+
+        font-size: 18px;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+        .dropdown-content-right a:hover[b-klhp4bherr] {
+            background-color: #f1f1f1;
+        }
+        .dropdown-content-right button:hover[b-klhp4bherr] {
+            background-color: #f1f1f1;
+        }
+.dropdown-content-left[b-klhp4bherr] {
+    display: none;
+    position: absolute;
+    left: 0;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    background-color: snow;
+}
+
+    .dropdown-content-left a[b-klhp4bherr] {
+
+        font-size: 18px;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+        .dropdown-content-left a:hover[b-klhp4bherr] {
+            background-color: #f1f1f1;
+        }
+
 
 .footer[b-klhp4bherr] {
   position: absolute;
