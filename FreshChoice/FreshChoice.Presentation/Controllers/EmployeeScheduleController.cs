@@ -36,19 +36,41 @@ namespace FreshChoice.Web.Controllers
 
         // POST: Create
         [HttpPost]
-        public async Task<IActionResult> Create(EmployeeShift shift)
+        public async Task<IActionResult> Create(EmployeeShift model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _db.EmployeeShifts.Add(shift);
-                await _db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // repopulate ViewBag data if needed
+                ViewBag.Employees = _db.Employees.ToList();
+                ViewBag.Departments = Enum.GetValues(typeof(Department));
+                return View(model);
             }
-            ViewBag.Employees = await _db.Employees.ToListAsync();
-            ViewBag.Shifts = await _db.Shifts.ToListAsync();
-            ViewBag.Departments = Enum.GetValues(typeof(Department));
-            return View(shift);
+
+            // Create a new Shift with the date/time entered in the form
+            var newShift = new Shift
+            {
+                Date = model.Shift.Date,
+                StartTime = model.Shift.StartTime,
+                EndTime = model.Shift.EndTime,
+                TotalTime = model.Shift.EndTime - model.Shift.StartTime
+            };
+
+            _db.Shifts.Add(newShift);
+
+            var employeeShift = new EmployeeShift
+            {
+                EmployeeId = model.EmployeeId,
+                Shift = newShift,
+                DepartmentId = model.DepartmentId
+            };
+
+            _db.EmployeeShifts.Add(employeeShift);
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
+
 
         // GET: Edit
         public async Task<IActionResult> Edit(int id)
