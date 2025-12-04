@@ -1,0 +1,128 @@
+body {
+    margin: 20px;
+    margin-top: 90px;
+}
+
+.container {
+    display: flex;
+    margin-top: 100px;
+}
+
+    .container .text {
+        text-align: left;
+        float: left;
+        margin-left: 5%
+    }
+
+    .container .con-button {
+        float: right;
+        margin-right: 5%;
+        text-decoration: none;
+    }
+
+.con-button a {
+    text-decoration: none;
+}
+
+.addbutton {
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    border: 4px solid black;
+    padding: 10px;
+    border-radius: 7px;
+    margin-left: 664px;
+}
+
+    .addbutton:hover {
+        background-color: #212121;
+        color: white;
+        text-decoration: none;
+        border: 4px solid #212121;
+        padding: 10px;
+        border-radius: 7px;
+    }
+
+
+
+.warning-label {
+    color: black;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+    .warning-label .good {
+        background-color: lawngreen;
+        padding: 8px;
+        border-radius: 10px;
+        border: 3px solid black;
+    }
+
+    .warning-label .bad {
+        background-color: #f9c561;
+        padding: 8px;
+        border-radius: 10px;
+        border: 3px solid black;
+    }
+
+.container2 {
+    display: flex;
+    margin-top: 20px;
+}
+
+    .container2 .search {
+        background-color: lightgray;
+        border-radius: 5px;
+        border: 1px solid lightgray;
+        width: 100px;
+        padding: 5px;
+        width: 25%;
+        margin-left: 5%;
+        margin-right: 20%;
+        text-align: center;
+    }
+
+    .container2 .filter {
+        background-color: lightgray;
+        border-radius: 5px;
+        border: 1px solid lightgray;
+        width: 100px;
+        padding: 5px;
+        margin-left: 25%;
+        width: 20%;
+        margin-right: 5%;
+        text-align: center;
+    }
+
+table {
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: 2px solid gray;
+}
+
+    table th {
+        text-align: center;
+        padding: 10px;
+        background-color: #f8f8f8;
+        border-bottom: 2px solid gray;
+    }
+
+    table td {
+        border-bottom: 2px solid gray;
+        padding: 10px;
+        text-align: center;
+    }
+
+td button {
+    border: 2px solid lightgray;
+    border-radius: 10px;
+    color: red;
+    background-color: #fff;
+}
+
+td s {
+    text-decoration: none;
+    color: black;
+}

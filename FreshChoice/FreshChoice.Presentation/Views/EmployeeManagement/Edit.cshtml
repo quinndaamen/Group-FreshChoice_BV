@@ -1,27 +1,103 @@
 ﻿@model FreshChoice.Services.EmployeeManagement.Models.EmployeeModel
 
-@{
-    ViewData["Title"] = "Edit Employee";
-}
-
-<h1>Edit Employee</h1>
-
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="Id" />
-
-    <div class="form-group">
-        <label asp-for="FirstName"></label>
-        <input asp-for="FirstName" class="form-control"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="LastName"></label>
-        <input asp-for="LastName" class="form-control"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control"/>
+<div class="container-page">
+    <div class="header">
+        <h2>Edit Employee</h2>
+        <p>Update the employee details below</p>
     </div>
 
-    <button type="submit" class="btn btn-success mt-2">Update</button>
-    <a asp-action="Index" class="btn btn-secondary mt-2">Cancel</a>
-</form>
+    <form asp-action="Edit" method="post" class="form-page">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control"/>
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-success">Update</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    body {
+        margin: 20px;
+        margin-top: 90px;
+        font-family: Arial, sans-serif;
+    }
+
+    .container-page {
+        width: 60%;
+        margin: 0 auto;
+    }
+
+    .header h2 {
+        margin-bottom: 5px;
+    }
+
+    .header p {
+        margin-bottom: 20px;
+        color: #555;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 7px;
+        border: 2px solid #ccc;
+        transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+        border-color: #000;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        outline: none;
+    }
+
+    .form-buttons {
+        margin-top: 20px;
+    }
+
+    .form-buttons .btn {
+        margin-right: 10px;
+        padding: 10px 20px;
+        border-radius: 7px;
+        font-weight: bold;
+    }
+
+    .btn-success {
+        background-color: #198754;
+        border: 2px solid #198754;
+        color: white;
+    }
+    .btn-success:hover {
+        background-color: #157347;
+        border: 2px solid #157347;
+    }
+
+    .btn-secondary {
+        background-color: #f0f0f0;
+        border: 2px solid #ccc;
+        color: black;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e0e0e0;
+    }
+</style>

@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true"/>
+        <None Include="wwwroot\images\logo.png" />
     </ItemGroup>
   
     <ItemGroup>
@@ -31,6 +32,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FreshChoice.Services\FreshChoice.Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
     </ItemGroup>
 
 </Project>
