@@ -3,35 +3,25 @@
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
 
-<div class="dropdown">
-    @if (SignInManager.IsSignedIn(User))
-    {
-
-        <a style="    font-size: 20px;
-        color: white;
-        text-decoration: none;" asp-controller="Account" asp-action="Manage" title="Manage"> @User.Identity?.Name <it class="bi bi-person-circle"></it></a>
-        <div class="dropdown-content-right">
-            <form asp-controller="Account" asp-action="Logout" method="post">
-                 <button type="submit" class="dropdown-button"  >
-                     <i class="bi bi-box-arrow-right"></i>
-                     Logout
-                 </button>
-            </form>
-        
-        <a href="#"><i class="bi bi-pencil-square"></i> Edit user</a>
-        <a href="#"><i class="bi bi-question-circle"></i> Help</a>
-        </div>
-    }
-    else
-    {
-        <a><it class="bi bi-person-circle"></it></a>
-        <div class="dropdown-content-right">
-            <div class="Login">
-                <a class="Login" style="text-decoration:none; color:black;" asp-controller="Account" asp-action="Login">
-                    <div class ="Text"> <i class="bi bi-box-arrow-in-right"></i>Login</div>
-				</a>
-			</div>
-            <a href="#"><i class="bi bi-question-circle"></i> Help</a>
-        </div>
-    }
-</div>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="user-info">
+        <a asp-controller="Account" asp-action="Manage" class="user-name" title="Manage Account">
+            @User.Identity?.Name
+            <i class="bi bi-person-circle"></i>
+        </a>
+        <form asp-controller="Account" asp-action="Logout" method="post" style="margin: 0;">
+            <button type="submit" class="logout-btn">
+                <i class="bi bi-box-arrow-right"></i>
+                Logout
+            </button>
+        </form>
+    </div>
+}
+else
+{
+    <a asp-controller="Account" asp-action="Login" class="login-link">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Login
+    </a>
+}

@@ -1,0 +1,125 @@
+/* Employee Management Specific Styles */
+/* This file extends the universal-forms.css stylesheet */
+
+/* Filters Container */
+.filters-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+/* Employee Cards Container */
+.employees-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.employee-card {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 20px;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.employee-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: #ccc;
+}
+
+/* Avatar */
+.employee-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #999;
+}
+
+/* Employee Info */
+.employee-info {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.employee-name-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.employee-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.employee-contact {
+    font-size: 13px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.info-section {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #666;
+}
+
+.info-section i {
+    color: #999;
+}
+
+/* Actions */
+.employee-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Responsive Design for Employee Cards */
+@media (max-width: 1024px) {
+    .employee-info {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .filters-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .employee-card {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .employee-info {
+        grid-template-columns: 1fr;
+    }
+
+    .employee-actions {
+        justify-content: flex-start;
+    }
+}

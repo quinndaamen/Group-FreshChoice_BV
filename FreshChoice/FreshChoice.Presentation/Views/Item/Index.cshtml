@@ -1,76 +1,133 @@
 @model IEnumerable<FreshChoice.Services.Item.Models.ItemModel>
-@using FreshChoice.Presentation.Views.Item
-@inject Placeholder test
 
+<link rel="stylesheet" href="~/css/inventory-management.css" />
 
-<body>
-    <div class="container">
-        <div class="text">
-            <h2>Inventory management</h2>
-            <p>Manage stocks</p>
+<div class="inventory-page">
+    <div class="inventory-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-text">
+                <h2>Inventory Management</h2>
+                <p>Manage stocks</p>
+            </div>
+            <div>
+                <a asp-action="Create" class="btn-primary">
+                    <i class="bi bi-plus-lg"></i> Add Product
+                </a>
+            </div>
         </div>
-        <div class="con-button">
-            <a asp-action="Create">
-                <div class="addbutton"><i class="bi bi-box-seam"> Add Products</i></div>
-            </a>
-        </div>
-    </div>
 
-    <div class="warning-label">
-        @if (test.stock == true)
+        <!-- Stock Alert -->
+        @{
+            var lowStockCount = Model.Count(i => i.Quantity > 0 && i.Quantity < 10);
+        }
+        
+        @if (lowStockCount > 0)
         {
-            <div class="good">
-                <h3>stock levels good</h3>
+            <div class="alert-banner">
+                <i class="bi bi-exclamation-circle"></i>
+                <div class="alert-content">
+                    <strong>Low Stock Alert</strong>
+                    <span>@lowStockCount product(s) running low on stock</span>
+                </div>
             </div>
         }
-        else
+
+        <!-- Search and Filter -->
+        <div class="search-filter-row">
+            <div class="search-container">
+                <i class="bi bi-search"></i>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search by product name or SKU..." 
+                />
+            </div>
+            <select id="categoryFilter" class="category-filter">
+                <option value="All Categories">All Categories</option>
+                <option value="Dairy">Dairy</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Produce">Produce</option>
+                <option value="Meat">Meat</option>
+                <option value="General">General</option>
+            </select>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryTableBody">
+                    @foreach (var item in Model)
+                    {
+                        var stockStatus = item.Quantity == 0 ? "out-stock" : (item.Quantity < 10 ? "low-stock" : "in-stock");
+                        var stockLabel = item.Quantity == 0 ? "Out of Stock" : (item.Quantity < 10 ? "Low Stock" : "In Stock");
+                        
+                        <tr class="inventory-row" 
+                            data-search="@item.Name ITEM-@item.Id.ToString().PadLeft(3, '0')" 
+                            data-category="General"
+                            data-item-id="@item.Id">
+                            <td class="sku-cell">ITEM-@item.Id.ToString().PadLeft(3, '0')</td>
+                            <td class="product-name">@item.Name</td>
+                            <td>
+                                <span class="category-badge category-general">General</span>
+                            </td>
+                            <td class="quantity-cell" data-quantity="@item.Quantity">
+                                <span class="quantity-value">@item.Quantity</span>
+                            </td>
+                            <td class="price-cell">$@item.Price.ToString("F1")</td>
+                            <td>
+                                <span class="status-badge @stockStatus">@stockLabel</span>
+                            </td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-action btn-plus" onclick="adjustStock(@item.Id, 1)" title="Increase quantity">
+                                        +
+                                    </button>
+                                    <button class="btn-action btn-minus" onclick="adjustStock(@item.Id, -1)" title="Decrease quantity">
+                                        −
+                                    </button>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn-action btn-edit" title="Edit product">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                        <button type="submit" class="btn-action btn-delete" onclick="return confirm('Delete this item?');" title="Delete product">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Empty State -->
+        @if (!Model.Any())
         {
-            <div class="bad">
-                <h3>low stock allert</h3>
-                <p>@($"{test.products_low} products running low on stock") </p>
+            <div class="empty-state" id="emptyState">
+                <i class="bi bi-box-seam"></i>
+                <p>No products found</p>
             </div>
         }
 
-    </div>
-
-    <div class="container2">
-        <div class="search">
-            <!--add searchbar logic--><div>searchbar W.I.P</div>
-        </div>
-        <div class="filter">
-            <!--dropdown filter here--><div>filter (WIP)</div>
+        <!-- No Results Message (Hidden by default) -->
+        <div class="empty-state" id="noResultsState" style="display: none;">
+            <i class="bi bi-search"></i>
+            <p>No products found</p>
         </div>
     </div>
+</div>
 
-
-
-
-
-    <table>
-        <tr>
-            <th>SKU</th>
-            <th>Product name</th>
-            <th>Category</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Actions</th>
-        </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td><!--add@SKU.Sku-->W.I.P</td>
-                <td>@item.Name</td>
-                <td><!--add@Category.category-->W.I.P</td>
-                <td>@item.Price</td>
-                <td>@item.Quantity</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a> |
-                    <a asp-action="Details" asp-route-id="@item.Id"><s>Details</s></a> |
-                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
-                        <button type="submit"><f class="bi bi-trash"></f></button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </table>
-</body>
+<script src="~/js/inventory-management.js"></script>

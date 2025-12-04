@@ -1,75 +1,50 @@
 ﻿@model FreshChoice.Services.Item.Models.ItemModel
 
-<div class="container">
-    <div class="text">
+<link rel="stylesheet" href="~/css/universal-forms.css" />
+
+<body>
+<div class="container-page form-container">
+    <div class="header centered">
         <h2>Create Item</h2>
         <p>Fill in product details</p>
     </div>
 
-    <form asp-action="Create" method="post" style="margin-left:5%; margin-right:5%; margin-top:20px;">
-        <div class="form-field" style="margin-bottom:20px;">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control-custom" />
+    <form asp-action="Create" method="post" class="universal-form">
+        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+        <!-- Product Information -->
+        <div class="form-field">
+            <label asp-for="Name">Product Name</label>
+            <input asp-for="Name" class="form-control-custom" placeholder="Enter product name" required />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
-        <div class="form-field" style="margin-bottom:20px;">
-            <label asp-for="Price"></label>
-            <input asp-for="Price" class="form-control-custom" />
+        <div class="form-row">
+            <div class="form-field">
+                <label asp-for="Price">Price ($)</label>
+                <input asp-for="Price" type="number" step="0.01" class="form-control-custom" placeholder="0.00" required />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="Quantity">Quantity</label>
+                <input asp-for="Quantity" type="number" class="form-control-custom" placeholder="0" required />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
         </div>
 
-        <div class="form-field" style="margin-bottom:20px;">
-            <label asp-for="Quantity"></label>
-            <input asp-for="Quantity" class="form-control-custom" />
-        </div>
-
-        <div class="form-buttons" style="text-align:center; margin-top:30px;">
-            <button type="submit" class="addbutton"><i class="bi bi-check-lg"></i> Save</button>
-            <a asp-action="Index" class="addbutton cancel-btn">Cancel</a>
+        <div class="form-buttons">
+            <button type="submit" class="btn">
+                <i class="bi bi-check-lg"></i> Create Product
+            </button>
+            <a asp-action="Index" class="btn-secondary">
+                <i class="bi bi-x-lg"></i> Cancel
+            </a>
         </div>
     </form>
 </div>
+</body>
 
-<style>
-    .form-control-custom {
-        width: 100%;
-        padding: 10px 12px;
-        border-radius: 7px;
-        border: 2px solid gray;
-        transition: border 0.2s, box-shadow 0.2s;
-    }
-
-    .form-control-custom:focus {
-        border-color: #000;
-        box-shadow: 0 0 5px rgba(0,0,0,0.1);
-        outline: none;
-    }
-
-    .addbutton {
-        background-color: black;
-        color: white;
-        border: 2px solid black;
-        padding: 10px 20px;
-        border-radius: 7px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-decoration: none;
-        margin-right: 10px;
-    }
-
-    .addbutton:hover {
-        background-color: #212121;
-        border-color: #212121;
-    }
-
-    .cancel-btn {
-        background-color: #ccc;
-        color: black;
-        border: 2px solid #aaa;
-    }
-
-    .cancel-btn:hover {
-        background-color: #bbb;
-        border-color: #999;
-    }
-</style>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -57,7 +57,6 @@ public class Program
         builder.Services.AddData(builder.Configuration);
         builder.Services.AddServices();
         builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
-        builder.Services.AddTransient<Placeholder>();
 
 
         var app = builder.Build();

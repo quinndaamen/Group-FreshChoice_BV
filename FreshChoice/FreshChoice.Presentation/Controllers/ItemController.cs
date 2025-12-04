@@ -77,5 +77,18 @@ namespace FreshChoice.Presentation.Controllers
             await _itemService.DeleteAsync(id);
             return RedirectToAction("Index");
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> AdjustStock(long id, int adjustment)
+        {
+            var item = await _itemService.GetByIdAsync(id);
+            if (item == null) return NotFound();
+    
+            item.Quantity += adjustment;
+            if (item.Quantity < 0) item.Quantity = 0;
+    
+            await _itemService.UpdateAsync(item);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

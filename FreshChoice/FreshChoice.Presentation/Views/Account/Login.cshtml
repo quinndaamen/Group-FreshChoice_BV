@@ -1,54 +1,56 @@
 ﻿@model FreshChoice.Presentation.Models.Account.LoginViewModel
 
-<style>
-    .centre {
-              display: flex;
-              justify-content: center; /* horizontal center */
-              align-items: center;     /* vertical center */
-              flex-direction: column;  /* optional: stack items vertically */
-              text-align: center;      /* center text/content */
-              }
-    h1 {
-        text-align: center;
-    }
-    h2 {
-        font-size: medium;
-    }
-</style>
-<h1>@ViewData["Title"]</h1>
-<div class="row">
-    <div class="centre" style="margin-top: 20px;">
-        <section>
-            <form id="account" method="post">
-                <h2>Enter you credentials to log in:</h2>
-                <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Email" class="form-label">Email</label>
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Password" class="form-label">Password</label>
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div class="checkbox mb-3">
-                    <label asp-for="RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="RememberMe" />
-                        @*@Html.DisplayNameFor(m => m.RememberMe)*@
-                    </label>
-                </div>
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    @*<p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>*@
-                </div>
-            </form>
-        </section>
+<link rel="stylesheet" href="~/css/login.css" />
+
+<div class="login-page">
+    <div class="login-container">
+        <!-- Logo -->
+        <div class="login-logo">
+            <img src="~/images/logo.png" alt="FreshChoice Logo">
+        </div>
+
+        <!-- Login Header -->
+        <div class="login-header">
+            <h1>Login to Your Account</h1>
+            <p>Enter your credentials to access your account</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="account" method="post" class="login-form">
+            <div asp-validation-summary="ModelOnly" class="text-danger validation-summary" role="alert"></div>
+            
+            <!-- Email Field -->
+            <div class="form-group">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label asp-for="Password" class="form-label">Password</label>
+                <input asp-for="Password" type="password" class="form-input" autocomplete="current-password" aria-required="true" placeholder="Enter your password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <!-- Remember Me -->
+            <div class="form-check-group">
+                <label class="checkbox-label">
+                    <input class="form-checkbox" asp-for="RememberMe" type="checkbox" />
+                    <span>Remember me</span>
+                </label>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-button">
+                <button id="login-submit" type="submit" class="login-btn">Login</button>
+            </div>
+
+            <!-- Forgot Password Link -->
+            <div class="forgot-password">
+                <a id="forgot-password" asp-action="ForgotPassword">Forgot Password?</a>
+            </div>
+        </form>
     </div>
 </div>
 

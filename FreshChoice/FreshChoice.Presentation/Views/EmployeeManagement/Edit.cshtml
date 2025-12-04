@@ -1,101 +1,91 @@
 ﻿@model FreshChoice.Services.EmployeeManagement.Models.EmployeeModel
 
-<div class="container-page">
-    <div class="header">
-        <h2>Edit Employee</h2>
-        <p>Update the employee details below</p>
+<link rel="stylesheet" href="~/css/universal-forms.css" />
+
+<body>
+    <div class="container-page form-container">
+        <div class="header centered">
+            <h2>Edit Employee</h2>
+            <p>Update employee information below</p>
+        </div>
+
+        <form asp-action="Edit" method="post" class="universal-form" data-autosave="edit-employee-@Model.Id">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            
+            <input type="hidden" asp-for="Id" />
+
+            <!-- Personal Information -->
+            <div class="form-row">
+                <div class="form-field">
+                    <label asp-for="FirstName">First Name</label>
+                    <input asp-for="FirstName" class="form-control-custom" placeholder="Enter first name" required />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="LastName">Last Name</label>
+                    <input asp-for="LastName" class="form-control-custom" placeholder="Enter last name" required />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="Email">Email (Optional)</label>
+                <input asp-for="Email" type="email" class="form-control-custom" placeholder="employee@freshchoice.com" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+                <small class="form-text">Email is optional but recommended for account notifications</small>
+            </div>
+
+            <!-- Shifts Info (Read-only) -->
+            @if (Model.Shifts != null && Model.Shifts.Any())
+            {
+                <div class="form-section">
+                    <h3 class="form-section-title">Assigned Shifts</h3>
+                    <div class="alert alert-info">
+                        <i class="bi bi-calendar-check"></i>
+                        This employee currently has @Model.Shifts.Count shift(s) assigned.
+                    </div>
+                </div>
+            }
+
+            <!-- Password Update (Optional) -->
+            <div class="form-section">
+                <h3 class="form-section-title">Update Password (Optional)</h3>
+                <p class="form-text" style="margin-bottom: 15px;">Leave blank to keep current password</p>
+                
+                <div class="form-field password-field">
+                    <label asp-for="Password">New Password</label>
+                    <input asp-for="Password" type="password" class="form-control-custom" placeholder="Enter new password" />
+                    <button type="button" class="password-toggle">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-field password-field">
+                    <label asp-for="ConfirmPassword">Confirm New Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control-custom" placeholder="Re-enter new password" />
+                    <button type="button" class="password-toggle">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="btn">
+                    <i class="bi bi-check-lg"></i> Save Changes
+                </button>
+                <a asp-action="Index" class="btn-secondary">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </a>
+            </div>
+        </form>
     </div>
 
-    <form id="editForm" asp-action="Edit" method="post" style="margin-left:5%; margin-right:5%; margin-top:20px;">
-        <input type="hidden" asp-for="Id" />
+    <script src="~/js/employee-forms.js"></script>
+</body>
 
-        <div class="form-field" style="margin-bottom:20px;">
-            <label asp-for="FirstName"></label>
-            <input asp-for="FirstName" class="form-control-custom" />
-        </div>
-
-        <div class="form-field" style="margin-bottom:20px;">
-            <label asp-for="LastName"></label>
-            <input asp-for="LastName" class="form-control-custom" />
-        </div>
-
-        <div class="form-field" style="margin-bottom:20px;">
-            <label asp-for="Email"></label>
-            <input asp-for="Email" class="form-control-custom" />
-        </div>
-
-        <div class="form-buttons" style="text-align:center; margin-top:30px;">
-            <button type="submit" class="addbutton"><i class="bi bi-check-lg"></i> Save</button>
-            <a asp-action="Index" class="addbutton cancel-btn">Cancel</a>
-        </div>
-    </form>
-</div>
-
-<style>
-    body {
-        margin: 20px;
-        margin-top: 90px;
-        font-family: Arial, sans-serif;
-    }
-
-    .container-page {
-        width: 60%;
-        margin: 0 auto;
-    }
-
-    .header h2 {
-        margin-bottom: 5px;
-    }
-
-    .header p {
-        margin-bottom: 20px;
-        color: #555;
-    }
-
-    .form-field {
-        margin-bottom: 15px;
-    }
-
-    .form-control-custom {
-        width: 100%;
-        padding: 10px 12px;
-        border-radius: 7px;
-        border: 2px solid gray;
-        transition: border 0.2s, box-shadow 0.2s;
-    }
-
-    .form-control-custom:focus {
-        border-color: #000;
-        box-shadow: 0 0 5px rgba(0,0,0,0.1);
-        outline: none;
-    }
-
-    .addbutton {
-        background-color: black;
-        color: white;
-        border: 2px solid black;
-        padding: 10px 20px;
-        border-radius: 7px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-decoration: none;
-        margin-right: 10px;
-    }
-
-    .addbutton:hover {
-        background-color: #212121;
-        border-color: #212121;
-    }
-
-    .cancel-btn {
-        background-color: #ccc;
-        color: black;
-        border: 2px solid #aaa;
-    }
-
-    .cancel-btn:hover {
-        background-color: #bbb;
-        border-color: #999;
-    }
-</style>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

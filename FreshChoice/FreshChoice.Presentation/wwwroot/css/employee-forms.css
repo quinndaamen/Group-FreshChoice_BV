@@ -1,0 +1,28 @@
+/* Employee Forms Specific Styles */
+/* This file extends the universal-forms.css stylesheet */
+/* Most styles are now in universal-forms.css - this file is for any employee-specific overrides */
+
+/* You can add employee-specific form customizations here if needed */
+
+/* Example: Custom styling for employee forms specifically */
+.employee-form .password-field {
+    position: relative;
+}
+
+.employee-form .password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 38px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    font-size: 16px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.employee-form .password-toggle:hover {
+    color: #333;
+}

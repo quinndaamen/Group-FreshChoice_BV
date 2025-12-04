@@ -58,8 +58,6 @@ Migrations/obj/
 *.jfm
 
 # ASP.NET publish
-wwwroot/
-**/wwwroot/*
 .publish/
 *.pubxml
 *.pubxml.user
