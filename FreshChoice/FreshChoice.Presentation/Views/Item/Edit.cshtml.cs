@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FreshChoice.Presentation.Views.Item;
 
-public class Edit : PageModel
+public class placeholder : PageModel
 {
-    public void OnGet()
-    {
-        
-    }
+    public bool stock = false;
+    public int products_low = 2;
 }
