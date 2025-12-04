@@ -1,10 +1,13 @@
 ﻿using FreshChoice.Services.Item.Contracts;
 using FreshChoice.Services.Item.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace FreshChoice.Web.Controllers
+
+namespace FreshChoice.Presentation.Controllers
 {
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class ItemController : Controller
     {
         private readonly IItemService _itemService;

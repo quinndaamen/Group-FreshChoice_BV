@@ -1,9 +1,12 @@
 ﻿using FreshChoice.Services.Announcement.Contracts;
 using FreshChoice.Services.Announcement.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Essentials.Results;
 
+namespace FreshChoice.Presentation.Controllers;
 
+[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public class AnnouncementController : Controller
 {
     private readonly IAnnouncementService _announcementService;

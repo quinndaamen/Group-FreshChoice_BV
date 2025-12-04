@@ -56,8 +56,8 @@ internal class EmployeeService : IEmployeeService
                 NormalizedEmail = employee.Email.ToUpper(),
                 NormalizedUserName = employee.Email.ToUpper()
             };
-
-            var result = await _userManager.CreateAsync(newEmployee);
+            
+            var result = await _userManager.CreateAsync(newEmployee, employee.Password ?? string.Empty);
 
             if (result.Succeeded)
                 return MutationResult.ResultFrom(newEmployee, "EmployeeCreated");

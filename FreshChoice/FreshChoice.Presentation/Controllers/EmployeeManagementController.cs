@@ -1,7 +1,12 @@
 ﻿using FreshChoice.Services.EmployeeManagement.Contracts;
 using FreshChoice.Services.EmployeeManagement.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+namespace FreshChoice.Presentation.Controllers;
+
+[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public class EmployeeManagementController : Controller
 {
     private readonly IEmployeeService _employeeService;
