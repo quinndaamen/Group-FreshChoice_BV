@@ -1,106 +1,114 @@
-using FreshChoice.Data;
 using FreshChoice.Data.Entities;
+using FreshChoice.Services.Shift.Contracts;
+using FreshChoice.Services.Shift.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
+using FreshChoice.Data;
+using FreshChoice.Services.EmployeeManagement.Contracts;
 
-namespace FreshChoice.Web.Controllers
+namespace FreshChoice.Presentation.Controllers
 {
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class EmployeeScheduleController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IShiftService _shiftService;
+        private readonly IEmployeeService _employeeService;
 
-        public EmployeeScheduleController(ApplicationDbContext db)
+        public EmployeeScheduleController(IShiftService shiftService,  IEmployeeService employeeService)
         {
-            _db = db;
+            _shiftService = shiftService;
+            _employeeService = employeeService;
         }
 
-        // GET: Index
+        // GET: Index - list all shifts with employees
         public async Task<IActionResult> Index()
         {
-            var schedule = await _db.EmployeeShifts
-                .Include(e => e.Employee)
-                .Include(s => s.Shift)
-                .ToListAsync();
-
-            return View(schedule);
+            var shifts = await _shiftService.GetAllShiftsAsync();
+            return View(shifts);
         }
 
         // GET: Create
         public async Task<IActionResult> Create()
         {
-            ViewBag.Employees = await _db.Employees.ToListAsync();
-            ViewBag.Shifts = await _db.Shifts.ToListAsync();
             ViewBag.Departments = Enum.GetValues(typeof(Department));
-            return View();
+            ViewBag.Employees = await _employeeService.GetAllEmployeesAsync();
+            return View(new ShiftModel());
         }
+
 
         // POST: Create
         [HttpPost]
-        public async Task<IActionResult> Create(EmployeeShift model)
+        public async Task<IActionResult> Create(Guid employeeId, ShiftModel model)
         {
+            if (model.EndTime <= model.StartTime)
+                ModelState.AddModelError("", "End time must be after start time.");
+
             if (!ModelState.IsValid)
             {
-                // repopulate ViewBag data if needed
-                ViewBag.Employees = _db.Employees.ToList();
                 ViewBag.Departments = Enum.GetValues(typeof(Department));
                 return View(model);
             }
 
-            // Create a new Shift with the date/time entered in the form
-            var newShift = new Shift
+            var result = await _shiftService.CreateShiftWithEmployeeAsync(employeeId, model);
+
+            if (!result.Succeeded)
             {
-                Date = model.Shift.Date,
-                StartTime = model.Shift.StartTime,
-                EndTime = model.Shift.EndTime,
-                TotalTime = model.Shift.EndTime - model.Shift.StartTime
-            };
-
-            _db.Shifts.Add(newShift);
-
-            var employeeShift = new EmployeeShift
-            {
-                EmployeeId = model.EmployeeId,
-                Shift = newShift,
-                DepartmentId = model.DepartmentId
-            };
-
-            _db.EmployeeShifts.Add(employeeShift);
-
-            await _db.SaveChangesAsync();
-
-            return RedirectToAction("Index");
-        }
-
-
-        // GET: Edit
-        public async Task<IActionResult> Edit(int id)
-        {
-            var shift = await _db.EmployeeShifts.FindAsync(id);
-            if (shift == null) return NotFound();
-
-            ViewBag.Employees = await _db.Employees.ToListAsync();
-            ViewBag.Shifts = await _db.Shifts.ToListAsync();
-            ViewBag.Departments = Enum.GetValues(typeof(Department));
-
-            return View(shift);
-        }
-
-        // POST: Edit
-        [HttpPost]
-        public async Task<IActionResult> Edit(EmployeeShift shift)
-        {
-            if (ModelState.IsValid)
-            {
-                _db.EmployeeShifts.Update(shift);
-                await _db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("", result.Message);
+                ViewBag.Departments = Enum.GetValues(typeof(Department));
+                return View(model);
             }
 
-            ViewBag.Employees = await _db.Employees.ToListAsync();
-            ViewBag.Shifts = await _db.Shifts.ToListAsync();
-            ViewBag.Departments = Enum.GetValues(typeof(Department));
+            return RedirectToAction(nameof(Index));
+        }
 
+        // GET: Edit shift
+        public async Task<IActionResult> Edit(long shiftId)
+        {
+            var shift = await _shiftService.GetShiftByIdAsync(shiftId);
+            if (shift == null) return NotFound();
+
+            ViewBag.Departments = Enum.GetValues(typeof(Department));
             return View(shift);
+        }
+
+        // POST: Edit shift
+        [HttpPost]
+        public async Task<IActionResult> Edit(ShiftModel model)
+        {
+            if (model.EndTime <= model.StartTime)
+                ModelState.AddModelError("", "End time must be after start time.");
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Departments = Enum.GetValues(typeof(Department));
+                return View(model);
+            }
+
+            var result = await _shiftService.UpdateShiftAsync(model);
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", result.Message);
+                ViewBag.Departments = Enum.GetValues(typeof(Department));
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Delete shift
+        [HttpPost]
+        public async Task<IActionResult> Delete(long shiftId)
+        {
+            var result = await _shiftService.DeleteShiftAsync(shiftId);
+
+            if (!result.Succeeded)
+                TempData["Error"] = result.Message;
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
