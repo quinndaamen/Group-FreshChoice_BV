@@ -5,9 +5,11 @@ public class EmployeeShift : Entity
 {
     public Guid EmployeeId { get; set; }
     public long ShiftId { get; set; }
-    public long DepartmentId { get; set; }   // ← You MUST keep this FK
+
+    public Department Department { get; set; } // enum storage, not FK
+    public Department DepartmentId { get; set; }  // use the enum directly
+
 
     public Employee Employee { get; set; }
-    public Department Department { get; set; }
     public Shift Shift { get; set; }
 }

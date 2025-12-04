@@ -1,0 +1,59 @@
+@model EmployeeShift
+@using FreshChoice.Data.Entities
+@using FreshChoice.Data
+
+<div class="container-page">
+    <h2>Add Employee Shift</h2>
+
+    <form asp-action="Create" method="post" class="form-page">
+        <div class="form-group">
+            <label>Employee</label>
+            <select asp-for="EmployeeId" class="form-control">
+                <option value="">-- Select Employee --</option>
+                @foreach(var e in ViewBag.Employees)
+                {
+                    <option value="@e.Id">@($"{e.FirstName} {e.LastName}")</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Shift</label>
+            <select asp-for="ShiftId" class="form-control">
+                <option value="">-- Select Shift --</option>
+                @foreach(var s in ViewBag.Shifts)
+                {
+                    <option value="@s.Id">@($"{s.Date:dd-MM-yyyy} | {s.StartTime:HH:mm}-{s.EndTime:HH:mm}")</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Department</label>
+            <select asp-for="DepartmentId" class="form-control">
+                <option value="">-- Select Department --</option>
+                @foreach (Department d in Enum.GetValues(typeof(Department)))
+                {
+                    <option value="@d">@d</option>
+                }
+            </select>
+        </div>
+
+
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-success">Save</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.container-page { width: 60%; margin: 90px auto; font-family: Arial,sans-serif; }
+.form-group { margin-bottom: 15px; }
+.form-control { width: 100%; padding: 10px; border-radius: 7px; border:2px solid #ccc; }
+.form-buttons { margin-top: 20px; text-align:center; }
+.btn-success { padding:10px 20px; border-radius:7px; border:none; color:white; background:#198754; font-weight:bold; }
+.btn-success:hover { background:#157347; }
+.btn-secondary { padding:10px 20px; border-radius:7px; border:2px solid #ccc; background:#f0f0f0; font-weight:bold; color:black; }
+.btn-secondary:hover { background:#e0e0e0; }
+</style>
