@@ -24,7 +24,7 @@
         </div>
         <div class="stat-card">
             <div class="label">Administrators</div>
-            <div class="value">@Model.Count(e => e.Role == "Administrator")</div>
+            <div class="value">@Model.Count(e => e.Role == "Admin")</div>
         </div>
         <div class="stat-card">
             <div class="label">Managers</div>
@@ -42,7 +42,7 @@
         <div class="custom-dropdown">
             <select class="filter-select" id="roleFilter">
                 <option value="">All Roles</option>
-                <option value="administrator">Administrator</option>
+                <option value="admin">Administrator</option>
                 <option value="manager">Manager</option>
                 <option value="employee">Employee</option>
             </select>
@@ -53,7 +53,7 @@
     <div class="employees-container">
         @foreach (var employee in Model)
         {
-            var roleClass = employee.Role == "Administrator" ? "role-manager" : 
+            var roleClass = employee.Role == "Admin" ? "role-manager" : 
                            employee.Role == "Manager" ? "role-supervisor" : 
                            "role-cashier";
             

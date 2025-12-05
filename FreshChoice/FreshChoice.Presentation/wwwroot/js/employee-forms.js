@@ -44,13 +44,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Wage Input Validation
     const wageInput = document.querySelector('input[name="WagePerHour"]');
     if (wageInput) {
-        wageInput.addEventListener('input', function(e) {
-            // Ensure only 2 decimal places
+        // Remove any input restrictions that might interfere with typing
+        wageInput.removeAttribute('maxlength');
+
+        // Only format on blur, not on every keystroke
+        wageInput.addEventListener('blur', function(e) {
             const value = parseFloat(e.target.value);
-            if (!isNaN(value)) {
+            if (!isNaN(value) && value >= 0) {
                 e.target.value = value.toFixed(2);
             }
         });
+
+        // Prevent the input from being affected by autosave initially
+        wageInput.addEventListener('focus', function(e) {
+            // Remove any autocomplete interference
+            e.target.setAttribute('autocomplete', 'off');
+        }, { once: true });
     }
 
     // Form Auto-save (Optional)
@@ -58,15 +67,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form && form.dataset.autosave) {
         const autosaveKey = form.dataset.autosave;
 
+        // Fields to exclude from autosave (can cause input issues)
+        const excludeFields = ['WagePerHour', 'Password', 'ConfirmPassword'];
+
         // Load saved data
         const savedData = localStorage.getItem(autosaveKey);
         if (savedData) {
             try {
                 const data = JSON.parse(savedData);
                 Object.keys(data).forEach(key => {
-                    const input = form.querySelector(`[name="${key}"]`);
-                    if (input && input.type !== 'password') {
-                        input.value = data[key];
+                    if (!excludeFields.includes(key)) {
+                        const input = form.querySelector(`[name="${key}"]`);
+                        if (input && input.type !== 'password') {
+                            input.value = data[key];
+                        }
                     }
                 });
             } catch (e) {
@@ -74,13 +88,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Save data on input
+        // Save data on input (exclude certain fields)
         const inputs = form.querySelectorAll('input:not([type="password"]), select, textarea');
         inputs.forEach(input => {
             input.addEventListener('input', function() {
                 const formData = {};
                 inputs.forEach(i => {
-                    if (i.name && i.type !== 'password') {
+                    if (i.name && i.type !== 'password' && !excludeFields.includes(i.name)) {
                         formData[i.name] = i.value;
                     }
                 });
