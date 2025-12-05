@@ -25,6 +25,8 @@ public class AnnouncementController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(AnnouncementModel model)
     {
+        model.Date = model.Date.Date;
+        
         if (!ModelState.IsValid)
             return View(model);
 
@@ -41,9 +43,7 @@ public class AnnouncementController : Controller
             // success
             Console.WriteLine("Update succeeded with ID: " + updateResult.MutatedEntityId);
         }
-
-
-
+        
         return RedirectToAction("Index", "Home");
     }
 }

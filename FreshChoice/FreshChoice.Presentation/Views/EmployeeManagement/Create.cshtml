@@ -64,11 +64,11 @@
                 <div class="form-field">
                     <label asp-for="WagePerHour">Hourly Wage <span class="required">*</span></label>
                     <div class="input-with-prefix">
-                        <span class="input-prefix">$</span>
+                        <span class="input-prefix">€</span>
                         <input asp-for="WagePerHour" type="number" step="0.01" min="0" class="form-control-custom with-prefix" placeholder="22.00" required />
                     </div>
                     <span asp-validation-for="WagePerHour" class="text-danger"></span>
-                    <small class="form-text">Enter hourly rate in dollars</small>
+                    <small class="form-text">Enter hourly rate in euros</small>
                 </div>
             </div>
 
@@ -115,17 +115,3 @@
 </div>
 
 <script src="~/js/employee-forms.js"></script>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        // Set default hire date to today
-        document.addEventListener('DOMContentLoaded', function() {
-            const hireDateInput = document.querySelector('input[name="HireDate"]');
-            if (hireDateInput && !hireDateInput.value) {
-                const today = new Date().toISOString().split('T')[0];
-                hireDateInput.value = today;
-            }
-        });
-    </script>
-}

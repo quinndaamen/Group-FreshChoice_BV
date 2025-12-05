@@ -1,23 +1,62 @@
 ﻿@model FreshChoice.Services.Announcement.Models.AnnouncementModel
 
-<h2>Create Announcement</h2>
+<link rel="stylesheet" href="~/css/universal-forms.css" />
 
-<form asp-action="Create" method="post">
-
-    <div>
-        <label>Name</label>
-        <input asp-for="Name" />
+<div class="form-container">
+    <div class="header centered">
+        <h2>Create Announcement</h2>
+        <p>Add a new announcement to share with your team</p>
     </div>
 
-    <div>
-        <label>Date</label>
-        <input asp-for="Date" type="date" />
-    </div>
+    <div class="universal-form">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
 
-    <div>
-        <label>Text</label>
-        <textarea asp-for="Text"></textarea>
-    </div>
+            <!-- Name Field -->
+            <div class="form-field">
+                <label asp-for="Name">
+                    Announcement Title
+                    <span class="required">*</span>
+                </label>
+                <input asp-for="Name" class="form-control-custom" placeholder="Enter announcement title" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
 
-    <button type="submit">Save</button>
-</form>
+            <!-- Date -->
+            <div class="form-field">
+                <label asp-for="Date">
+                    Date
+                    <span class="required">*</span>
+                </label>
+                <input asp-for="Date" type="date" class="form-control-custom" value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+
+            <!-- Text Field -->
+            <div class="form-field">
+                <label asp-for="Text">
+                    Announcement Text
+                    <span class="required">*</span>
+                </label>
+                <textarea asp-for="Text" class="form-control-custom" rows="6" placeholder="Enter announcement details..."></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-buttons">
+                <a asp-action="Index" class="btn-secondary">
+                    <i class="bi bi-x-lg"></i>
+                    Cancel
+                </a>
+                <button type="submit" class="btn">
+                    <i class="bi bi-check-lg"></i>
+                    Create Announcement
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

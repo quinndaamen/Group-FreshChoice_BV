@@ -23,7 +23,7 @@
         </div>
         <div class="stat-card">
             <div class="label">Administrators</div>
-            <div class="value">@Model.Count(e => e.Role == "Admin")</div>
+            <div class="value">@Model.Count(e => e.Role == "Administrator")</div>
         </div>
         <div class="stat-card">
             <div class="label">Managers</div>
@@ -50,13 +50,13 @@
     <div class="employees-container">
         @foreach (var employee in Model)
         {
-            var roleClass = employee.Role == "Admin" ? "role-manager" : 
+            var roleClass = employee.Role == "Administrator" ? "role-manager" : 
                            employee.Role == "Manager" ? "role-supervisor" : 
                            "role-cashier";
             
             <div class="employee-card" 
                  data-search="@employee.FirstName @employee.LastName @employee.Email"
-                 data-role="@employee.Role?"
+                 data-role="@employee.Role?.ToLower()"
                  data-status="active">
                 
                 <!-- Avatar -->
@@ -72,7 +72,7 @@
                             <span>@employee.FirstName @employee.LastName</span>
                             @if (!string.IsNullOrEmpty(employee.Role))
                             {
-                                <span class="badge @roleClass">@employee.Role</span>
+                                <span class="badge @roleClass">@employee.Role.ToLower()</span>
                             }
                         </div>
                         <div class="employee-contact">
@@ -90,13 +90,13 @@
                     <!-- Hired Date -->
                     <div class="info-section">
                         <i class="bi bi-calendar"></i>
-                        <span>Hired: @(employee.HireDate != null ? employee.HireDate.ToString("MMM dd, yyyy") : "N/A")</span>
+                        <span>Hired: <span class="date-display" data-date="@(employee.HireDate.ToString("yyyy-MM-dd"))">@(employee.HireDate != null ? employee.HireDate.ToString("MMM dd, yyyy", System.Globalization.CultureInfo.InvariantCulture) : "N/A")</span></span>
                     </div>
 
                     <!-- Salary -->
                     <div class="info-section salary">
-                        <i class="bi bi-currency-dollar"></i>
-                        <span>@(employee.WagePerHour != null ? $"${employee.WagePerHour:F2}/hr" : "N/A")</span>
+                        <i class="bi bi-currency-euro"></i>
+                        <span>@(employee.WagePerHour != null ? $"{employee.WagePerHour:F2}/hr" : "N/A")</span>
                     </div>
                 </div>
 

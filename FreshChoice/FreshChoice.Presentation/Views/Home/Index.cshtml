@@ -37,7 +37,7 @@
 
                     <div class="announcement-date">
                         <i class="bi bi-calendar3"></i>
-                        @ann.Date.ToString("MMM dd, yyyy")
+                        @ann.Date.ToString("MMM dd, yyyy", new System.Globalization.CultureInfo("en-US"))
                     </div>
                     <h3 class="announcement-title">@ann.Name</h3>
                     <p class="announcement-text">@ann.Text</p>

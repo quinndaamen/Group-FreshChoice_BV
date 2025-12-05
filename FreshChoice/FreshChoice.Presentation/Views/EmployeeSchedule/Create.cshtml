@@ -1,65 +1,108 @@
 @model FreshChoice.Services.Shift.Models.ShiftModel
 @using FreshChoice.Data
-@using FreshChoice.Data.Entities
 @using FreshChoice.Services.EmployeeManagement.Models
 
 @{
     var employees = ViewBag.Employees as IEnumerable<EmployeeModel>;
+    var today = DateTime.Today.ToString("yyyy-MM-dd");
 }
 
-<div class="container-page">
-    <h2>Create Shift</h2>
+<link rel="stylesheet" href="~/css/universal-forms.css" />
 
-    <form asp-action="Create" method="post">
-        <label>Employee</label>
-        <select name="employeeId" class="form-control" required>
-            <option value="">-- Select Employee --</option>
-            @foreach (var e in employees ?? [])
-            {
-                <option value="@e.Id">@($"{e.FirstName} {e.LastName}")</option>
-            }
-        </select>
+<div class="form-container">
+    <div class="header centered">
+        <h2>Add Shift</h2>
+        <p>Schedule a new shift for an employee</p>
+    </div>
 
-        <div class="form-group">
-            <label>Date</label>
-            <input asp-for="Date" type="date" class="form-control" />
-        </div>
+    <div class="universal-form">
+        <form asp-action="Create" method="post" id="shiftForm">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
 
-        <div class="form-group">
-            <label>Start Time</label>
-            <input asp-for="StartTime" type="time" class="form-control" />
-        </div>
+            <!-- Employee Selection -->
+            <div class="form-field">
+                <label>
+                    Employee
+                    <span class="required">*</span>
+                </label>
+                <select name="employeeId" class="form-control-custom" required>
+                    <option value="">-- Select Employee --</option>
+                    @if (employees != null)
+                    {
+                        @foreach (var e in employees)
+                        {
+                            <option value="@e.Id">@e.FirstName @e.LastName</option>
+                        }
+                    }
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label>End Time</label>
-            <input asp-for="EndTime" type="time" class="form-control" />
-        </div>
+            <!-- Date -->
+            <div class="form-field">
+                <label asp-for="Date">
+                    Date
+                    <span class="required">*</span>
+                </label>
+                <input asp-for="Date" type="date" class="form-control-custom" value="@today" min="@today" required />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label>Department</label>
-            <select asp-for="Department" class="form-control">
-                <option value="">-- Select Department --</option>
-                @foreach (Department d in Enum.GetValues(typeof(Department)))
-                {
-                    <option value="@d">@d</option>
-                }
-            </select>
-        </div>
+            <!-- Time Fields Row -->
+            <div class="form-row">
+                <!-- Start Time -->
+                <div class="form-field">
+                    <label asp-for="StartTime">
+                        Start Time
+                        <span class="required">*</span>
+                    </label>
+                    <input asp-for="StartTime" type="time" class="form-control-custom" min="08:00" max="22:00" required />
+                    <small class="form-text">Store hours: 08:00 - 22:00</small>
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
 
-        <div class="form-buttons">
-            <button type="submit" class="btn btn-success">Save</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+                <!-- End Time -->
+                <div class="form-field">
+                    <label asp-for="EndTime">
+                        End Time
+                        <span class="required">*</span>
+                    </label>
+                    <input asp-for="EndTime" type="time" class="form-control-custom" min="08:00" max="22:00" required />
+                    <small class="form-text">Store hours: 08:00 - 22:00</small>
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Department -->
+            <div class="form-field">
+                <label asp-for="Department">
+                    Department
+                    <span class="required">*</span>
+                </label>
+                <select asp-for="Department" class="form-control-custom">
+                    <option value="">-- Select Department --</option>
+                    @foreach (Department d in Enum.GetValues(typeof(Department)))
+                    {
+                        <option value="@d">@d</option>
+                    }
+                </select>
+                <span asp-validation-for="Department" class="text-danger"></span>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-buttons">
+                <a asp-action="Index" class="btn-secondary">
+                    <i class="bi bi-x-lg"></i>
+                    Cancel
+                </a>
+                <button type="submit" class="btn">
+                    <i class="bi bi-check-lg"></i>
+                    Create Shift
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
-<style>
-.container-page { width: 60%; margin: 50px auto; font-family: Arial, sans-serif; }
-.form-group { margin-bottom: 15px; }
-.form-control { width: 100%; padding: 10px; border-radius: 7px; border:2px solid #ccc; }
-.form-buttons { margin-top: 20px; text-align:center; }
-.btn-success { padding:10px 20px; border-radius:7px; border:none; color:white; background:#198754; font-weight:bold; }
-.btn-success:hover { background:#157347; }
-.btn-secondary { padding:10px 20px; border-radius:7px; border:2px solid #ccc; background:#f0f0f0; font-weight:bold; color:black; }
-.btn-secondary:hover { background:#e0e0e0; }
-</style>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

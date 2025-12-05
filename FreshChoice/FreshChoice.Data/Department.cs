@@ -8,5 +8,4 @@ public enum Department
     Cleaner = 3,
     Stockers = 4,
     Supervisor = 5
-    
 }

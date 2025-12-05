@@ -1,53 +1,166 @@
 @model IEnumerable<FreshChoice.Services.Shift.Models.ShiftModel>
-@using FreshChoice.Data.Entities
+
+@{
+    // Week calculation
+    int weekOffset = int.TryParse(Context.Request.Query["weekOffset"], out var offset) ? offset : 0;
+    var today = DateTime.Today;
+    var weekStart = today.AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday + (weekOffset * 7));
+    var weekEnd = weekStart.AddDays(6);
+
+    // Get all employees from shifts
+    var employeeService = Context.RequestServices.GetService(typeof(FreshChoice.Services.EmployeeManagement.Contracts.IEmployeeService)) as FreshChoice.Services.EmployeeManagement.Contracts.IEmployeeService;
+    var allEmployees = await employeeService.GetAllEmployeesAsync();
+    
+    // Filter shifts for current week
+    var weekShifts = Model.Where(s => s.Date.Date >= weekStart && s.Date.Date <= weekEnd).ToList();
+}
+
+<link rel="stylesheet" href="~/css/schedule.css" />
 
 <div class="container-page">
-    <h2>Employee Shifts</h2>
+    <!-- Header -->
+    <div class="header">
+        <div class="text">
+            <h2>Employee Schedule</h2>
+            <p>Manage weekly work schedules for your team</p>
+        </div>
+        <div class="con-button">
+            <a asp-action="Create" class="btn">
+                <i class="bi bi-plus-lg"></i> Add Shift
+            </a>
+        </div>
+    </div>
 
-    <a asp-action="Create" class="btn btn-success mb-3">Add Shift</a>
+    <!-- Week Navigation -->
+    <div class="week-navigation">
+        <a href="?weekOffset=@(weekOffset - 1)" class="week-nav-btn">
+            <i class="bi bi-chevron-left"></i>
+        </a>
+        <div class="week-display">
+            <span class="week-label">Week of</span>
+            <span class="week-dates">@weekStart.ToString("MMMM dd", new System.Globalization.CultureInfo("en-US")) - @weekEnd.ToString("MMMM dd, yyyy", new System.Globalization.CultureInfo("en-US"))</span>
+        </div>
+        <a href="?weekOffset=@(weekOffset + 1)" class="week-nav-btn">
+            <i class="bi bi-chevron-right"></i>
+        </a>
+    </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Total Time</th>
-                <th>Department</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var shift in Model)
-            {
-                <tr>
-                    <td>@shift.Date.ToLocalTime().ToString("yyyy-MM-dd")</td>
-                    <td>@shift.StartTime.ToLocalTime().ToString("HH:mm")</td>
-                    <td>@shift.EndTime.ToLocalTime().ToString("HH:mm")</td>
-                    <td>@shift.TotalTime</td>
-                    <td>@shift.Department</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-shiftId="@shift.Id" class="btn btn-primary btn-sm">Edit</a>
-                        <form asp-action="Delete" asp-route-shiftId="@shift.Id" method="post" style="display:inline">
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    </td>
-                </tr>
+    <!-- Role Legend -->
+    <div class="role-legend">
+        <div class="legend-item">
+            <span class="legend-dot bakery"></span>
+            <span>Bakery</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot butchery"></span>
+            <span>Butchery</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot cashier"></span>
+            <span>Cashier</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot cleaner"></span>
+            <span>Cleaner</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot stockers"></span>
+            <span>Stockers</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot supervisor"></span>
+            <span>Supervisor</span>
+        </div>
+    </div>
+
+    <!-- Schedule Grid -->
+    <div class="schedule-container">
+        <div class="schedule-grid">
+            <!-- Header Row - Days of Week -->
+            <div class="schedule-header">
+                <div class="employee-column-header">Employee</div>
+                @for (int i = 0; i < 7; i++)
+                {
+                    var date = weekStart.AddDays(i);
+                    var isToday = date.Date == DateTime.Today;
+                    <div class="day-header @(isToday ? "today" : "")">
+                        <div class="day-name">@date.ToString("dddd", new System.Globalization.CultureInfo("en-US"))</div>
+                        <div class="day-date">@date.ToString("MMM dd", new System.Globalization.CultureInfo("en-US"))</div>
+                    </div>
+                }
+            </div>
+
+            <!-- Employee Rows -->
+
+            @{
+                var employeeModels = allEmployees.ToList();
             }
-        </tbody>
-    </table>
+            @foreach (var employee in employeeModels)
+            {
+                // Get employee shifts through EmployeeShifts join
+                var employeeShifts = weekShifts.Where(s => 
+                    Context.RequestServices.GetService<FreshChoice.Data.ApplicationDbContext>()
+                        .EmployeeShifts.Any(es => es.ShiftId == s.Id && es.EmployeeId == employee.Id)
+                ).ToList();
+
+                // Skip employees with no shifts this week
+                if (!employeeShifts.Any()) continue;
+
+                <div class="schedule-row">
+                    <!-- Employee Name Cell -->
+                    <div class="employee-cell">
+                        <span class="employee-name">@employee.FirstName @employee.LastName</span>
+                    </div>
+
+                    <!-- Day Cells -->
+                    @for (int i = 0; i < 7; i++)
+                    {
+                        var date = weekStart.AddDays(i);
+                        var shiftsForDay = employeeShifts.Where(s => s.Date.Date == date.Date).ToList();
+                        var isToday = date.Date == DateTime.Today;
+
+                        <div class="day-cell @(isToday ? "today" : "")" data-date="@date.ToString("yyyy-MM-dd")" data-employee="@employee.Id">
+                            @foreach (var shift in shiftsForDay)
+                            {
+                                var deptClass = shift.Department?.ToString().ToLower() ?? "default";
+                                
+                                <div class="shift-block @deptClass" data-shift-id="@shift.Id">
+                                    <div class="shift-time">@shift.StartTime.ToLocalTime().ToString("HH:mm")</div>
+                                    <div class="shift-time">@shift.EndTime.ToLocalTime().ToString("HH:mm")</div>
+                                    <div class="shift-dept">@shift.Department</div>
+                                    <div class="shift-actions">
+                                        <a asp-action="Edit" asp-route-shiftId="@shift.Id" class="shift-edit" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form asp-action="Delete" asp-route-shiftId="@shift.Id" method="post" style="display:inline;" onsubmit="return confirm('Delete this shift?');">
+                                            <button type="submit" class="shift-delete" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        @if (!employeeModels.Any())
+        {
+            <div class="alert">
+                <i class="bi bi-info-circle"></i>
+                <span>No employees found. Add employees to start scheduling shifts.</span>
+            </div>
+        }
+        @if (employeeModels.Any() && !weekShifts.Any())
+        {
+            <div class="alert">
+                <i class="bi bi-info-circle"></i>
+                <span>No shifts scheduled for this week. Click "Add Shift" to create one.</span>
+            </div>
+        }
+    </div>
 </div>
 
-<style>
-.container-page { width: 80%; margin: 50px auto; font-family: Arial, sans-serif; }
-.table { width: 100%; border-collapse: collapse; }
-.table th, .table td { padding: 10px; border: 1px solid #ccc; text-align: center; }
-.btn { padding: 8px 16px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; }
-.btn-success { background-color: #198754; color: white; }
-.btn-success:hover { background-color: #157347; }
-.btn-primary { background-color: #0d6efd; color: white; }
-.btn-primary:hover { background-color: #0b5ed7; }
-.btn-danger { background-color: #dc3545; color: white; }
-.btn-danger:hover { background-color: #bb2d3b; }
-.mb-3 { margin-bottom: 15px; }
-</style>
+<script src="~/js/schedule.js"></script>

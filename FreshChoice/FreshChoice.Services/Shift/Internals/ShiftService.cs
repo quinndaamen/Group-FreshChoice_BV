@@ -78,9 +78,10 @@ internal class ShiftService : IShiftService
                 return MutationResult.ResultFrom("End time must be after start time.");
 
             // Apply updated fields (converted to UTC)
+            
             existing.StartTime = shift.StartTime.ToUniversalTime();
             existing.EndTime = shift.EndTime.ToUniversalTime();
-            existing.Date = shift.Date.ToUniversalTime();
+            existing.Date = DateTime.SpecifyKind(shift.Date.Date, DateTimeKind.Utc);
             existing.TotalTime = shift.TotalTime;
             existing.Department = shift.Department;
 
@@ -126,7 +127,7 @@ internal class ShiftService : IShiftService
             {
                 StartTime = shift.StartTime.ToUniversalTime(),
                 EndTime = shift.EndTime.ToUniversalTime(),
-                Date = shift.Date.ToUniversalTime(),
+                Date = DateTime.SpecifyKind(shift.Date.Date, DateTimeKind.Utc),  // ✅ FIXED!
                 TotalTime = shift.TotalTime,
                 Department = shift.Department
             };

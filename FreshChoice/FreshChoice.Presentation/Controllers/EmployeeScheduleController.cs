@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Runtime.InteropServices.JavaScript;
 using System.Threading.Tasks;
 using FreshChoice.Data;
 using FreshChoice.Services.EmployeeManagement.Contracts;
@@ -43,6 +44,23 @@ namespace FreshChoice.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Guid employeeId, ShiftModel model)
         {
+            model.Date = model.Date.Date;
+            
+            if(model.Date < new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0) )
+                ModelState.AddModelError("Date", "Date must be in the future.");
+            
+            if (model.StartTime.TimeOfDay < new TimeSpan(8, 0, 0) || 
+                model.StartTime.TimeOfDay > new TimeSpan(22, 0, 0))
+            {
+                ModelState.AddModelError("StartTime", "Start time must be between 08:00 and 22:00");
+            }
+            
+            if (model.EndTime.TimeOfDay < new TimeSpan(8, 0, 0) || 
+                model.EndTime.TimeOfDay > new TimeSpan(22, 0, 0))
+            {
+                ModelState.AddModelError("EndTime", "End time must be between 08:00 and 22:00");
+            }
+            
             if (model.EndTime <= model.StartTime)
                 ModelState.AddModelError("", "End time must be after start time.");
 
@@ -78,8 +96,25 @@ namespace FreshChoice.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(ShiftModel model)
         {
+            model.Date = model.Date.Date;
+            
+            if(model.Date < new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0) )
+                ModelState.AddModelError("Date", "Date must be in the future.");
+            
             if (model.EndTime <= model.StartTime)
                 ModelState.AddModelError("", "End time must be after start time.");
+            
+            if (model.StartTime.TimeOfDay < new TimeSpan(8, 0, 0) || 
+                model.StartTime.TimeOfDay > new TimeSpan(22, 0, 0))
+            {
+                ModelState.AddModelError("StartTime", "Start time must be between 08:00 and 22:00");
+            }
+            
+            if (model.EndTime.TimeOfDay < new TimeSpan(8, 0, 0) || 
+                model.EndTime.TimeOfDay > new TimeSpan(22, 0, 0))
+            {
+                ModelState.AddModelError("EndTime", "End time must be between 08:00 and 22:00");
+            }
 
             if (!ModelState.IsValid)
             {
