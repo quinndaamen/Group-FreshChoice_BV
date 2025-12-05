@@ -12,90 +12,97 @@
 </head>
 
 <body>
-    <!-- Top Navbar -->
-    <header>
-        <nav class="top-navbar">
-            <div class="navbar-logo-container">
-                <button class="sidebar-toggle" id="sidebarToggle">
-                    <i class="bi bi-list"></i>
-                </button>
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/logo.png" alt="FreshChoice Logo" class="navbar-logo">
-                </a>
-            </div>
+<!-- Top Navbar -->
+<header>
+    <nav class="top-navbar">
+        <div class="navbar-logo-container">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="bi bi-list"></i>
+            </button>
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo.png" alt="FreshChoice Logo" class="navbar-logo">
+            </a>
+        </div>
 
-            <div class="navbar-right">
-                <partial name="_LoginPartial" />
-            </div>
-        </nav>
-    </header>
+        <div class="navbar-right">
+            <partial name="_LoginPartial"/>
+        </div>
+    </nav>
+</header>
 
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
-        <ul class="sidebar-nav">
+<!-- Sidebar Navigation -->
+<aside class="sidebar">
+    <ul class="sidebar-nav">
+        <li>
+            <a asp-controller="Home" asp-action="Index"
+               class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                <i class="bi bi-house"></i>
+                <span>Home</span>
+            </a>
+        </li>
+        <li>
+            <a href="/EmployeeSchedule/Index"
+               class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "EmployeeSchedule" ? "active" : "")">
+                <i class="bi bi-calendar"></i>
+                <span>Schedule</span>
+            </a>
+        </li>
+        @if (User.IsInRole("Admin"))
+        {
             <li>
-                <a asp-controller="Home" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
-                    <i class="bi bi-house"></i>
-                    <span>Home</span>
-                </a>
-            </li>
-            <li>
-                <a href="/EmployeeSchedule/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "EmployeeSchedule" ? "active" : "")">
-                    <i class="bi bi-calendar"></i>
-                    <span>Schedule</span>
-                </a>
-            </li>
-            <li>
-                <a href="/EmployeeManagement/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "EmployeeManagement" ? "active" : "")">
+                <a href="/EmployeeManagement/Index"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "EmployeeManagement" ? "active" : "")">
                     <i class="bi bi-people"></i>
                     <span>Employee Management</span>
                 </a>
             </li>
-            <li>
-                <a href="/Item/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Item" ? "active" : "")">
-                    <i class="bi bi-box-seam"></i>
-                    <span>Inventory</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
+        }
+        <li>
+            <a href="/Item/Index"
+               class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Item" ? "active" : "")">
+                <i class="bi bi-box-seam"></i>
+                <span>Inventory</span>
+            </a>
+        </li>
+    </ul>
+</aside>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <main role="main">
-            @RenderBody()
-        </main>
+<!-- Main Content -->
+<div class="main-content">
+    <main role="main">
+        @RenderBody()
+    </main>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="footer-content">
+        &copy; 2025 - FreshChoice - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
+</footer>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="footer-content">
-            &copy; 2025 - FreshChoice - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    // Sidebar toggle functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        const footer = document.querySelector('.site-footer');
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script>
-        // Sidebar toggle functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
-            const footer = document.querySelector('.site-footer');
-
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('collapsed');
-                    mainContent.classList.toggle('expanded');
-                    if (footer) {
-                        footer.classList.toggle('expanded');
-                    }
-                });
-            }
-        });
-    </script>
-    @await RenderSectionAsync("Scripts", required: false)
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function () {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+                if (footer) {
+                    footer.classList.toggle('expanded');
+                }
+            });
+        }
+    });
+</script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

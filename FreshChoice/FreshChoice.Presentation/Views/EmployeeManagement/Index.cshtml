@@ -40,7 +40,7 @@
         <input type="text" class="search-input" id="searchInput" placeholder="Search by name or email..." />
         <select class="filter-select" id="roleFilter">
             <option value="">All Roles</option>
-            <option value="administrator">Administrator</option>
+            <option value="admin">Administrator</option>
             <option value="manager">Manager</option>
             <option value="employee">Employee</option>
         </select>
@@ -50,7 +50,7 @@
     <div class="employees-container">
         @foreach (var employee in Model)
         {
-            var roleClass = employee.Role == "Administrator" ? "role-manager" : 
+            var roleClass = employee.Role == "Admin" ? "role-manager" : 
                            employee.Role == "Manager" ? "role-supervisor" : 
                            "role-cashier";
             

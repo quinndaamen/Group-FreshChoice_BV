@@ -5,7 +5,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<link rel="stylesheet" href="~/css/home.css" />
+<link rel="stylesheet" href="~/css/home.css"/>
 
 <div class="home-container">
     <!-- Header Section -->
@@ -14,10 +14,13 @@
             <h1>Announcements</h1>
             <p>Recent company updates</p>
         </div>
-        <a asp-controller="Announcement" asp-action="Create" class="create-btn">
-            <i class="bi bi-plus-lg"></i>
-            Create New Announcement
-        </a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Announcement" asp-action="Create" class="create-btn">
+                <i class="bi bi-plus-lg"></i>
+                Create New Announcement
+            </a>
+        }
     </div>
 
     <!-- Announcements Grid -->
@@ -28,13 +31,17 @@
             {
                 <div class="announcement-card">
                     <!-- Delete Button -->
-                    <form asp-controller="Announcement" asp-action="Delete" asp-route-id="@ann.Id" method="post" style="display: inline;">
-                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this announcement?');">
-                            <i class="bi bi-trash"></i>
-                            Delete
-                        </button>
-                    </form>
-
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <form asp-controller="Announcement" asp-action="Delete" asp-route-id="@ann.Id" method="post"
+                              style="display: inline;">
+                            <button type="submit" class="delete-btn"
+                                    onclick="return confirm('Are you sure you want to delete this announcement?');">
+                                <i class="bi bi-trash"></i>
+                                Delete
+                            </button>
+                        </form>
+                    }
                     <div class="announcement-date">
                         <i class="bi bi-calendar3"></i>
                         @ann.Date.ToString("MMM dd, yyyy", new System.Globalization.CultureInfo("en-US"))

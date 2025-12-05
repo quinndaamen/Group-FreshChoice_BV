@@ -57,7 +57,7 @@
                     <label asp-for="Role">Role <span class="required">*</span></label>
                     <select asp-for="Role" class="form-control-custom" required>
                         <option value="">Select a role</option>
-                        <option value="Administrator">Administrator</option>
+                        <option value="Admin">Administrator</option>
                         <option value="Manager">Manager</option>
                         <option value="Employee">Employee</option>
                     </select>
@@ -130,3 +130,6 @@
 </div>
 
 <script src="~/js/employee-forms.js"></script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
