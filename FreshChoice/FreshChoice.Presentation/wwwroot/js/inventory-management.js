@@ -81,29 +81,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Update Low Stock Alert
-    function updateLowStockAlert() {
-        const alertBanner = document.querySelector('.alert-banner');
+    // Update Stock Alerts
+    function updateStockAlerts() {
+        const outOfStockAlert = document.querySelector('.alert-banner.alert-danger');
+        const lowStockAlert = document.querySelector('.alert-banner.alert-warning');
+        let outOfStockCount = 0;
         let lowStockCount = 0;
 
         inventoryRows.forEach(row => {
             const quantityCell = row.querySelector('.quantity-cell');
             const quantity = parseInt(quantityCell.getAttribute('data-quantity'));
 
-            if (quantity > 0 && quantity < 10) {
+            if (quantity === 0) {
+                outOfStockCount++;
+            } else if (quantity > 0 && quantity < 10) {
                 lowStockCount++;
             }
         });
 
-        if (alertBanner) {
+        // Update Out of Stock Alert
+        if (outOfStockAlert) {
+            if (outOfStockCount > 0) {
+                outOfStockAlert.style.display = 'flex';
+                const alertText = outOfStockAlert.querySelector('span');
+                if (alertText) {
+                    alertText.textContent = `${outOfStockCount} product(s) completely out of stock`;
+                }
+            } else {
+                outOfStockAlert.style.display = 'none';
+            }
+        }
+
+        // Update Low Stock Alert
+        if (lowStockAlert) {
             if (lowStockCount > 0) {
-                alertBanner.style.display = 'flex';
-                const alertText = alertBanner.querySelector('span');
+                lowStockAlert.style.display = 'flex';
+                const alertText = lowStockAlert.querySelector('span');
                 if (alertText) {
                     alertText.textContent = `${lowStockCount} product(s) running low on stock`;
                 }
             } else {
-                alertBanner.style.display = 'none';
+                lowStockAlert.style.display = 'none';
             }
         }
     }
@@ -111,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Make adjustStock available globally
     window.adjustStock = function(itemId, adjustment) {
         // Find the row
-        const row = document.querySelector(`[data-item-id="${itemId}"]`);
+        const row = document.querySelector(`[data-item-id=\"${itemId}\"]`);
         if (!row) return;
 
         const quantityCell = row.querySelector('.quantity-cell');
@@ -127,8 +145,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update status badge
         updateStockStatus(row, newQuantity);
 
-        // Update low stock alert
-        updateLowStockAlert();
+        // Update stock alerts
+        updateStockAlerts();
 
         // Add a visual feedback animation
         quantityCell.style.transform = 'scale(1.1)';
@@ -136,15 +154,33 @@ document.addEventListener('DOMContentLoaded', function() {
             quantityCell.style.transform = 'scale(1)';
         }, 200);
 
-        // Here you would typically make an AJAX call to update the backend
-        // Example:
-        // fetch(`/Item/AdjustStock/${itemId}`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({ adjustment: adjustment })
-        // });
+        // Save to database via AJAX
+        fetch(`/Item/AdjustStock/${itemId}?adjustment=${adjustment}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    // If save failed, revert the change
+                    quantityValue.textContent = currentQuantity;
+                    quantityCell.setAttribute('data-quantity', currentQuantity);
+                    updateStockStatus(row, currentQuantity);
+                    updateStockAlerts();
+                    alert('Failed to update stock. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating stock:', error);
+                // Revert on error
+                quantityValue.textContent = currentQuantity;
+                quantityCell.setAttribute('data-quantity', currentQuantity);
+                updateStockStatus(row, currentQuantity);
+                updateStockAlerts();
+                alert('Failed to update stock. Please try again.');
+            });
     };
 
     // Add transition to quantity cells
@@ -153,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Initialize low stock alert on page load
-    updateLowStockAlert();
+    updateStockAlerts();
 
     // Enhanced search with debouncing for better performance
     let searchTimeout;
@@ -189,10 +225,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Optional: Auto-save functionality
+// Auto-save functionality
 function setupAutoSave() {
     let saveTimeout;
-    const autoSaveDelay = 2000; // 2 seconds
+    const autoSaveDelay = 500; // 1/2 seconds
 
     function scheduleSave(itemId, quantity) {
         clearTimeout(saveTimeout);
@@ -202,9 +238,6 @@ function setupAutoSave() {
             // fetch(`/Item/Update/${itemId}`, { ... });
         }, autoSaveDelay);
     }
-
-    // Call this function when quantity changes
-    // scheduleSave(itemId, newQuantity);
 }
 
 // Export functions if needed

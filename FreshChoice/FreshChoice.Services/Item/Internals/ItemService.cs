@@ -47,6 +47,7 @@ namespace FreshChoice.Services.Item.Internals
             entity.Name = model.Name;
             entity.Price = model.Price;
             entity.Quantity = model.Quantity;
+            entity.Category = model.Category;
 
             _context.Items.Update(entity);
             await _context.SaveChangesAsync();

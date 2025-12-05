@@ -1,6 +1,7 @@
 ﻿@model FreshChoice.Services.EmployeeManagement.Models.EmployeeModel
 
 <link rel="stylesheet" href="~/css/universal-forms.css" />
+<link rel="stylesheet" href="~/css/custom-dropdown.css" />
 
 <div class="container-page form-container">
     <div class="header centered">
@@ -52,12 +53,14 @@
             <div class="form-row">
                 <div class="form-field">
                     <label asp-for="Role">Role <span class="required">*</span></label>
-                    <select asp-for="Role" class="form-control-custom" required>
-                        <option value="">Select a role</option>
-                        <option value="Admin">Administrator</option>
-                        <option value="Manager">Manager</option>
-                        <option value="Employee">Employee</option>
-                    </select>
+                    <div class="custom-dropdown full-width">
+                        <select asp-for="Role" class="form-control-custom" required>
+                            <option value="">Select a role</option>
+                            <option value="Administrator">Administrator</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Employee">Employee</option>
+                        </select>
+                    </div>
                     <span asp-validation-for="Role" class="text-danger"></span>
                 </div>
 
@@ -115,3 +118,18 @@
 </div>
 
 <script src="~/js/employee-forms.js"></script>
+<script src="~/js/custom-dropdown.js"></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Set default hire date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const hireDateInput = document.querySelector('input[name="HireDate"]');
+            if (hireDateInput && !hireDateInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                hireDateInput.value = today;
+            }
+        });
+    </script>
+}

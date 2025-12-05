@@ -11,7 +11,8 @@ public static class ItemExtensions
             Id = entity.Id,
             Name = entity.Name,
             Price = entity.Price,
-            Quantity = entity.Quantity
+            Quantity = entity.Quantity,
+            Category =  entity.Category,
         };
     }
 
@@ -22,7 +23,8 @@ public static class ItemExtensions
             Id = model.Id,
             Name = model.Name,
             Price = model.Price,
-            Quantity = model.Quantity
+            Quantity = model.Quantity,
+            Category =  model.Category,
         };
     }
 }
