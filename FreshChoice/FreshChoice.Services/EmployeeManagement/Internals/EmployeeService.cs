@@ -4,6 +4,7 @@ using FreshChoice.Data.Entities;
 using FreshChoice.Services.EmployeeManagement.Contracts;
 using FreshChoice.Services.EmployeeManagement.Extensions;
 using FreshChoice.Services.EmployeeManagement.Models;
+using FreshChoice.Services.Identity.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -27,12 +28,33 @@ internal class EmployeeService : IEmployeeService
     }
 
     // ---------------- GET ALL ----------------
-    public async Task<IEnumerable<EmployeeModel>> GetAllEmployeesAsync() =>
-        await _context.Employees
+    public async Task<IEnumerable<EmployeeModel>> GetAllEmployeesAsync()
+    {
+        var employees = await _context.Employees
             .Include(e => e.EmployeeShifts)
             .AsNoTracking()
-            .Select(e => e.ToModel())
             .ToListAsync();
+        
+        var employeeModels = new List<EmployeeModel>();
+        foreach (var e in employees)
+        {
+            var roles = await _userManager.GetRolesAsync(e);
+            employeeModels.Add(new EmployeeModel
+            {
+                Id = e.Id,
+                FirstName = e.FirstName,
+                LastName = e.LastName,
+                Email = e.Email,
+                Role = roles.FirstOrDefault() ?? "None",
+                WagePerHour = e.WagePerHour,
+                PhoneNumber = e.PhoneNumber,
+                HireDate = e.HireDate,
+            });
+        }
+
+        return (employeeModels);
+    }
+        
 
     // ---------------- GET BY ID ----------------
     public async Task<EmployeeModel?> GetEmployeeByIdAsync(Guid employeeId) =>
@@ -43,7 +65,7 @@ internal class EmployeeService : IEmployeeService
             .FirstOrDefaultAsync();
 
     // ---------------- CREATE ----------------
-    public async Task<MutationResult> CreateEmployeeAsync(EmployeeModel employee)
+    public async Task<IdentityResult> CreateEmployeeAsync(EmployeeModel employee)
     {
         try
         {
@@ -54,32 +76,55 @@ internal class EmployeeService : IEmployeeService
                 Email = employee.Email,
                 UserName = employee.Email,
                 NormalizedEmail = employee.Email.ToUpper(),
-                NormalizedUserName = employee.Email.ToUpper()
+                NormalizedUserName = employee.Email.ToUpper(),
+                HireDate = DateTime.SpecifyKind(employee.HireDate, DateTimeKind.Utc),
+                PhoneNumber = employee.PhoneNumber,
+                WagePerHour = employee.WagePerHour,
             };
             
             var result = await _userManager.CreateAsync(newEmployee, employee.Password ?? string.Empty);
+            if (!result.Succeeded)
+            {
+                return IdentityResult.Failed(result.Errors.ToArray());
+            }
 
-            if (result.Succeeded)
-                return MutationResult.ResultFrom(newEmployee, "EmployeeCreated");
+            if (!string.IsNullOrWhiteSpace(employee.Role))
+            {
+                var roleResult = await _userManager.AddToRoleAsync(newEmployee, employee.Role);
 
-            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            return MutationResult.ResultFrom(new Exception(errors));
+                if (!roleResult.Succeeded)
+                {
+                    // Delete user to avoid half-registered users
+                    await _userManager.DeleteAsync(newEmployee);
+                    return IdentityResult.Failed(roleResult.Errors.ToArray());
+                }
+            }
+
+            return IdentityResult.Success;
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error creating employee");
-            return MutationResult.ResultFrom(e);
+            _logger.LogError(e, "An exception occurred while creating an employee with email: {Email}", employee.Email);
+            return IdentityResult.Failed(new IdentityError
+            {
+                Code = "UserCreationException",
+                Description = "An unexpected error occurred while creating the user.",
+            });
         }
     }
 
     // ---------------- UPDATE ----------------
-    public async Task<MutationResult> UpdateEmployeeAsync(EmployeeModel employee)
+    public async Task<IdentityResult> UpdateEmployeeAsync(EmployeeModel employee)
     {
         try
         {
             var existing = await _context.Employees.FindAsync(employee.Id);
             if (existing == null)
-                return MutationResult.ResultFrom(null, "EmployeeNotFound");
+                return IdentityResult.Failed(new IdentityError
+                {
+                    Code = "UserNotFound",
+                    Description = "User not found.",
+                });
 
             existing.FirstName = employee.FirstName;
             existing.LastName = employee.LastName;
@@ -87,14 +132,57 @@ internal class EmployeeService : IEmployeeService
             existing.UserName = employee.Email;
             existing.NormalizedEmail = employee.Email.ToUpper();
             existing.NormalizedUserName = employee.Email.ToUpper();
+            existing.HireDate = DateTime.SpecifyKind(employee.HireDate, DateTimeKind.Utc);
+            existing.PhoneNumber = employee.PhoneNumber;
+            
+            var updateResult = await _userManager.UpdateAsync(existing);
+            if (!updateResult.Succeeded)
+            {
+                return updateResult;
+            }
+            
+            var currentRoles = await _userManager.GetRolesAsync(existing);
+            var currentRole = currentRoles.FirstOrDefault();
 
-            await _context.SaveChangesAsync();
-            return MutationResult.ResultFrom(existing, "EmployeeUpdated");
+            if (!string.Equals(currentRole, employee.Role, StringComparison.OrdinalIgnoreCase))
+            {
+                if (currentRoles.Any())
+                {
+                    var removeResult = await _userManager.RemoveFromRolesAsync(existing, currentRoles);
+                    if (!removeResult.Succeeded)
+                    {
+                        return removeResult;
+                    }
+                }
+
+                var addResult = await _userManager.AddToRoleAsync(existing, employee.Role);
+                if (!addResult.Succeeded)
+                {
+                    return addResult;
+                }
+
+                if (!string.IsNullOrWhiteSpace(employee.Password))
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(existing);
+                    var passwordResult = await _userManager.ResetPasswordAsync(existing, token, employee.Password);
+
+                    if (!passwordResult.Succeeded)
+                    {
+                        return passwordResult;
+                    }
+                }
+            }
+            
+            return IdentityResult.Success;
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error updating employee");
-            return MutationResult.ResultFrom(e);
+            _logger.LogError(e, "An error occurred while updating user with ID {UserId}", employee.Id);
+            return IdentityResult.Failed(new IdentityError
+            {
+                Code = "UpdateUserException",
+                Description = "An unexpected error occurred while updating the user.",
+            });
         }
     }
 

@@ -2,75 +2,130 @@
 
 <link rel="stylesheet" href="~/css/universal-forms.css" />
 
-<body>
-    <div class="container-page form-container">
-        <div class="header centered">
-            <h2>Create Employee</h2>
-            <p>Add a new team member to the system</p>
-        </div>
+<div class="container-page form-container">
+    <div class="header centered">
+        <h2>Create Employee</h2>
+        <p>Add a new team member to the system</p>
+    </div>
 
-        <form asp-action="Create" method="post" class="universal-form" data-autosave="create-employee">
-            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+    <form asp-action="Create" method="post" class="universal-form" data-autosave="create-employee">
+        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
 
-            <!-- Personal Information -->
+        <!-- Personal Information -->
+        <div class="form-section">
+            <h3 class="form-section-title">Personal Information</h3>
+            
             <div class="form-row">
                 <div class="form-field">
-                    <label asp-for="FirstName">First Name</label>
+                    <label asp-for="FirstName">First Name <span class="required">*</span></label>
                     <input asp-for="FirstName" class="form-control-custom" placeholder="Enter first name" required />
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
 
                 <div class="form-field">
-                    <label asp-for="LastName">Last Name</label>
+                    <label asp-for="LastName">Last Name <span class="required">*</span></label>
                     <input asp-for="LastName" class="form-control-custom" placeholder="Enter last name" required />
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
             </div>
 
+            <div class="form-row">
+                <div class="form-field">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" type="email" class="form-control-custom" placeholder="employee@freshchoice.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <small class="form-text">Optional but recommended for notifications</small>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="PhoneNumber">Phone Number <span class="required">*</span></label>
+                    <input asp-for="PhoneNumber" type="tel" class="form-control-custom" placeholder="(855) 234-5678" required />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employment Details -->
+        <div class="form-section">
+            <h3 class="form-section-title">Employment Details</h3>
+            
+            <div class="form-row">
+                <div class="form-field">
+                    <label asp-for="Role">Role <span class="required">*</span></label>
+                    <select asp-for="Role" class="form-control-custom" required>
+                        <option value="">Select a role</option>
+                        <option value="Administrator">Administrator</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Employee">Employee</option>
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="WagePerHour">Hourly Wage <span class="required">*</span></label>
+                    <div class="input-with-prefix">
+                        <span class="input-prefix">$</span>
+                        <input asp-for="WagePerHour" type="number" step="0.01" min="0" class="form-control-custom with-prefix" placeholder="22.00" required />
+                    </div>
+                    <span asp-validation-for="WagePerHour" class="text-danger"></span>
+                    <small class="form-text">Enter hourly rate in dollars</small>
+                </div>
+            </div>
+
             <div class="form-field">
-                <label asp-for="Email">Email (Optional)</label>
-                <input asp-for="Email" type="email" class="form-control-custom" placeholder="employee@freshchoice.com" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-                <small class="form-text">Email is optional but recommended for account notifications</small>
+                <label asp-for="HireDate">Hire Date <span class="required">*</span></label>
+                <input asp-for="HireDate" type="date" class="form-control-custom" required />
+                <span asp-validation-for="HireDate" class="text-danger"></span>
+                <small class="form-text">Default is today's date</small>
             </div>
+        </div>
 
-            <!-- Account Security -->
-            <div class="form-section">
-                <h3 class="form-section-title">Account Security</h3>
-                
-                <div class="form-field password-field">
-                    <label asp-for="Password">Password</label>
-                    <input asp-for="Password" type="password" class="form-control-custom" placeholder="Enter password" required />
-                    <button type="button" class="password-toggle">
-                        <i class="bi bi-eye"></i>
-                    </button>
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-
-                <div class="form-field password-field">
-                    <label asp-for="ConfirmPassword">Confirm Password</label>
-                    <input asp-for="ConfirmPassword" type="password" class="form-control-custom" placeholder="Re-enter password" required />
-                    <button type="button" class="password-toggle">
-                        <i class="bi bi-eye"></i>
-                    </button>
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="form-buttons">
-                <button type="submit" class="btn">
-                    <i class="bi bi-check-lg"></i> Create Employee
+        <!-- Account Security -->
+        <div class="form-section">
+            <h3 class="form-section-title">Account Security</h3>
+            
+            <div class="form-field password-field">
+                <label asp-for="Password">Password <span class="required">*</span></label>
+                <input asp-for="Password" type="password" class="form-control-custom" placeholder="Enter password" required />
+                <button type="button" class="password-toggle">
+                    <i class="bi bi-eye"></i>
                 </button>
-                <a asp-action="Index" class="btn-secondary">
-                    <i class="bi bi-x-lg"></i> Cancel
-                </a>
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-        </form>
-    </div>
 
-    <script src="~/js/employee-forms.js"></script>
-</body>
+            <div class="form-field password-field">
+                <label asp-for="ConfirmPassword">Confirm Password <span class="required">*</span></label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control-custom" placeholder="Re-enter password" required />
+                <button type="button" class="password-toggle">
+                    <i class="bi bi-eye"></i>
+                </button>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn">
+                <i class="bi bi-check-lg"></i> Create Employee
+            </button>
+            <a asp-action="Index" class="btn-secondary">
+                <i class="bi bi-x-lg"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script src="~/js/employee-forms.js"></script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Set default hire date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const hireDateInput = document.querySelector('input[name="HireDate"]');
+            if (hireDateInput && !hireDateInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                hireDateInput.value = today;
+            }
+        });
+    </script>
 }

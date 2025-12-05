@@ -27,9 +27,4 @@
       </Reference>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="#Emigrations\" />
-      <Folder Include="Migrations\" />
-    </ItemGroup>
-
 </Project>

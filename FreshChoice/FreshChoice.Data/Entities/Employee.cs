@@ -8,4 +8,6 @@ public class Employee : IdentityUser<Guid>
     public string LastName { get; set; }
     
     public ICollection<EmployeeShift> EmployeeShifts { get; set; }
+    public float WagePerHour { get; set; }
+    public DateTime HireDate { get; set; }
 }

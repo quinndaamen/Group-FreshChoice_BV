@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - FreshChoice.Presentation</title>
+    <title>@ViewData["Title"] - FreshChoice</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
@@ -12,28 +12,16 @@
 </head>
 
 <body>
+    <!-- Top Navbar -->
     <header>
         <nav class="top-navbar">
-            <div class="navbar-left">
-                <div class="logo-dropdown">
-                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                        <img src="~/images/logo.png" alt="FreshChoice Logo" class="navbar-logo">
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="/EmployeeSchedule/Index">
-                            <i class="bi bi-calendar"></i>
-                            <span>Schedule</span>
-                        </a>
-                        <a href="/EmployeeManagement/Index">
-                            <i class="bi bi-people"></i>
-                            <span>Employee Management</span>
-                        </a>
-                        <a href="/Item/Index">
-                            <i class="bi bi-box-seam"></i>
-                            <span>Inventory</span>
-                        </a>
-                    </div>
-                </div>
+            <div class="navbar-logo-container">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="bi bi-list"></i>
+                </button>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.png" alt="FreshChoice Logo" class="navbar-logo">
+                </a>
             </div>
 
             <div class="navbar-right">
@@ -42,21 +30,72 @@
         </nav>
     </header>
 
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <ul class="sidebar-nav">
+            <li>
+                <a asp-controller="Home" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                    <i class="bi bi-house"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="/EmployeeSchedule/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "EmployeeSchedule" ? "active" : "")">
+                    <i class="bi bi-calendar"></i>
+                    <span>Schedule</span>
+                </a>
+            </li>
+            <li>
+                <a href="/EmployeeManagement/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "EmployeeManagement" ? "active" : "")">
+                    <i class="bi bi-people"></i>
+                    <span>Employee Management</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Item/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Item" ? "active" : "")">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Inventory</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
     <div class="main-content">
         <main role="main">
             @RenderBody()
         </main>
     </div>
 
+    <!-- Footer -->
     <footer class="site-footer">
         <div class="footer-content">
-            &copy; 2025 - FreshChoice.Presentation - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - FreshChoice - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const footer = document.querySelector('.site-footer');
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('expanded');
+                    if (footer) {
+                        footer.classList.toggle('expanded');
+                    }
+                });
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

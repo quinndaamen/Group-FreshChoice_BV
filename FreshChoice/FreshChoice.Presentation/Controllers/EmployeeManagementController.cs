@@ -18,7 +18,7 @@ public class EmployeeManagementController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var employees = await _employeeService.GetAllEmployeesAsync(); // <- all employees
+        var employees = await _employeeService.GetAllEmployeesAsync();
         return View(employees);
     }
 

@@ -1,187 +1,118 @@
-// Employee Forms JavaScript - Form Validation and Enhancement
+// Employee Forms JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
-
     // Password Toggle Functionality
     const passwordToggles = document.querySelectorAll('.password-toggle');
 
     passwordToggles.forEach(toggle => {
         toggle.addEventListener('click', function() {
-            const input = this.previousElementSibling;
+            const passwordField = this.previousElementSibling;
             const icon = this.querySelector('i');
 
-            if (input.type === 'password') {
-                input.type = 'text';
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
                 icon.classList.remove('bi-eye');
                 icon.classList.add('bi-eye-slash');
             } else {
-                input.type = 'password';
+                passwordField.type = 'password';
                 icon.classList.remove('bi-eye-slash');
                 icon.classList.add('bi-eye');
             }
         });
     });
 
-    // Form Validation Enhancement
-    const forms = document.querySelectorAll('.universal-form, .employee-form');
+    // Phone Number Formatting
+    const phoneInput = document.querySelector('input[name="PhoneNumber"]');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
 
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            let isValid = true;
-            const requiredFields = form.querySelectorAll('[required]');
-
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.classList.add('input-validation-error');
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = `(${value}`;
+                } else if (value.length <= 6) {
+                    value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
                 } else {
-                    field.classList.remove('input-validation-error');
-                }
-            });
-
-            // Email validation (only if field exists and has value)
-            const emailFields = form.querySelectorAll('input[type="email"]');
-            emailFields.forEach(field => {
-                if (field.value && !isValidEmail(field.value)) {
-                    isValid = false;
-                    field.classList.add('input-validation-error');
-                    showError(field, 'Please enter a valid email address');
-                }
-            });
-
-            // Password match validation
-            const password = form.querySelector('input[name="Password"]');
-            const confirmPassword = form.querySelector('input[name="ConfirmPassword"]');
-
-            if (password && confirmPassword) {
-                // Only validate if both have values OR if password has value (creating)
-                const isCreating = !form.querySelector('input[name="Id"]');
-
-                if (isCreating) {
-                    // Creating new employee - passwords required and must match
-                    if (password.value !== confirmPassword.value) {
-                        isValid = false;
-                        confirmPassword.classList.add('input-validation-error');
-                        showError(confirmPassword, 'Passwords do not match');
-                    }
-                } else {
-                    // Editing employee - only validate if changing password
-                    if (password.value || confirmPassword.value) {
-                        if (password.value !== confirmPassword.value) {
-                            isValid = false;
-                            confirmPassword.classList.add('input-validation-error');
-                            showError(confirmPassword, 'Passwords do not match');
-                        }
-                    }
+                    value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
                 }
             }
 
-            if (!isValid) {
-                e.preventDefault();
+            e.target.value = value;
+        });
+    }
+
+    // Wage Input Validation
+    const wageInput = document.querySelector('input[name="WagePerHour"]');
+    if (wageInput) {
+        wageInput.addEventListener('input', function(e) {
+            // Ensure only 2 decimal places
+            const value = parseFloat(e.target.value);
+            if (!isNaN(value)) {
+                e.target.value = value.toFixed(2);
             }
         });
+    }
 
-        // Remove error styling on input
-        const inputs = form.querySelectorAll('.form-control-custom');
-        inputs.forEach(input => {
-            input.addEventListener('input', function() {
-                this.classList.remove('input-validation-error');
-                const errorMsg = this.parentElement.querySelector('.text-danger');
-                if (errorMsg && !errorMsg.hasAttribute('data-valmsg-for')) {
-                    errorMsg.remove();
-                }
-            });
-        });
-    });
-
-    // Real-time email validation
-    const emailInputs = document.querySelectorAll('input[type="email"]');
-    emailInputs.forEach(input => {
-        input.addEventListener('blur', function() {
-            if (this.value && !isValidEmail(this.value)) {
-                this.classList.add('input-validation-error');
-                showError(this, 'Please enter a valid email address');
-            }
-        });
-    });
-
-    // Form submission loading state
-    const submitButtons = document.querySelectorAll('button[type="submit"]');
-    submitButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const form = this.closest('form');
-            if (form.checkValidity()) {
-                this.disabled = true;
-                const originalContent = this.innerHTML;
-                this.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
-
-                // Re-enable after 5 seconds as a fallback
-                setTimeout(() => {
-                    this.disabled = false;
-                    this.innerHTML = originalContent;
-                }, 5000);
-            }
-        });
-    });
-
-    // Auto-save draft (optional - stores form data in sessionStorage)
-    const autoSaveForms = document.querySelectorAll('.universal-form[data-autosave], .employee-form[data-autosave]');
-    autoSaveForms.forEach(form => {
-        const formId = form.getAttribute('data-autosave');
+    // Form Auto-save (Optional)
+    const form = document.querySelector('.universal-form');
+    if (form && form.dataset.autosave) {
+        const autosaveKey = form.dataset.autosave;
 
         // Load saved data
-        const savedData = sessionStorage.getItem(`form_${formId}`);
+        const savedData = localStorage.getItem(autosaveKey);
         if (savedData) {
-            const data = JSON.parse(savedData);
-            Object.keys(data).forEach(key => {
-                const input = form.querySelector(`[name="${key}"]`);
-                if (input && input.type !== 'password') {
-                    input.value = data[key];
-                }
-            });
+            try {
+                const data = JSON.parse(savedData);
+                Object.keys(data).forEach(key => {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input && input.type !== 'password') {
+                        input.value = data[key];
+                    }
+                });
+            } catch (e) {
+                console.error('Error loading autosaved data:', e);
+            }
         }
 
         // Save data on input
-        form.addEventListener('input', function() {
-            const formData = {};
-            const inputs = form.querySelectorAll('.form-control-custom');
-            inputs.forEach(input => {
-                if (input.name && input.type !== 'password') {
-                    formData[input.name] = input.value;
-                }
+        const inputs = form.querySelectorAll('input:not([type="password"]), select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const formData = {};
+                inputs.forEach(i => {
+                    if (i.name && i.type !== 'password') {
+                        formData[i.name] = i.value;
+                    }
+                });
+                localStorage.setItem(autosaveKey, JSON.stringify(formData));
             });
-            sessionStorage.setItem(`form_${formId}`, JSON.stringify(formData));
         });
 
-        // Clear saved data on successful submit
+        // Clear autosave on successful submit
         form.addEventListener('submit', function() {
-            sessionStorage.removeItem(`form_${formId}`);
+            localStorage.removeItem(autosaveKey);
         });
-    });
-
-    // Helper Functions
-    function isValidEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
     }
 
-    function showError(field, message) {
-        // Remove existing error message (only custom ones, not validation framework ones)
-        const existingError = field.parentElement.querySelector('.text-danger:not([data-valmsg-for])');
-        if (existingError) {
-            existingError.remove();
-        }
+    // Confirm Password Validation
+    const passwordInput = document.querySelector('input[name="Password"]');
+    const confirmPasswordInput = document.querySelector('input[name="ConfirmPassword"]');
 
-        // Add new error message
-        const errorMsg = document.createElement('span');
-        errorMsg.className = 'text-danger';
-        errorMsg.textContent = message;
-        field.parentElement.appendChild(errorMsg);
-    }
+    if (passwordInput && confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('blur', function() {
+            if (passwordInput.value && confirmPasswordInput.value) {
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    confirmPasswordInput.setCustomValidity('Passwords do not match');
+                } else {
+                    confirmPasswordInput.setCustomValidity('');
+                }
+            }
+        });
 
-    // Smooth scroll to validation errors
-    const validationSummary = document.querySelector('.validation-summary-errors');
-    if (validationSummary) {
-        validationSummary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        passwordInput.addEventListener('input', function() {
+            if (confirmPasswordInput.value) {
+                confirmPasswordInput.dispatchEvent(new Event('blur'));
+            }
+        });
     }
 });

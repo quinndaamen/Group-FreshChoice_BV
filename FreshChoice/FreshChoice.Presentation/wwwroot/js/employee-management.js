@@ -1,58 +1,43 @@
-// Employee Management Filter and Search Functionality
+// Employee Management Search and Filter Functionality
 
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
+    const roleFilter = document.getElementById('roleFilter');
+    const statusFilter = document.getElementById('statusFilter');
     const employeeCards = document.querySelectorAll('.employee-card');
 
-    // Function to filter employees
     function filterEmployees() {
-        const searchTerm = searchInput.value.toLowerCase();
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        const roleValue = roleFilter ? roleFilter.value.toLowerCase() : '';
+        const statusValue = statusFilter ? statusFilter.value.toLowerCase() : '';
 
         employeeCards.forEach(card => {
-            const searchText = card.getAttribute('data-search').toLowerCase();
+            const searchData = card.getAttribute('data-search')?.toLowerCase() || '';
+            const roleData = card.getAttribute('data-role')?.toLowerCase() || '';
+            const statusData = card.getAttribute('data-status')?.toLowerCase() || '';
 
-            // Check if card matches search
-            const matchesSearch = searchText.includes(searchTerm);
+            const matchesSearch = searchData.includes(searchTerm);
+            const matchesRole = roleValue === '' || roleData === roleValue;
+            const matchesStatus = statusValue === '' || statusData === statusValue;
 
-            // Show or hide card
-            if (matchesSearch) {
-                card.style.display = 'grid';
+            if (matchesSearch && matchesRole && matchesStatus) {
+                card.classList.remove('hidden');
             } else {
-                card.style.display = 'none';
+                card.classList.add('hidden');
             }
         });
-
-        // Show "no results" message if needed
-        const visibleCards = Array.from(employeeCards).filter(card => card.style.display !== 'none');
-        let noResultsMsg = document.getElementById('no-results-message');
-
-        if (visibleCards.length === 0 && searchTerm) {
-            if (!noResultsMsg) {
-                noResultsMsg = document.createElement('div');
-                noResultsMsg.id = 'no-results-message';
-                noResultsMsg.className = 'alert alert-info';
-                noResultsMsg.innerHTML = '<i class="bi bi-search"></i> No employees found matching your search.';
-                document.querySelector('.employees-container').appendChild(noResultsMsg);
-            }
-        } else if (noResultsMsg) {
-            noResultsMsg.remove();
-        }
     }
 
-    // Add event listener
+    // Add event listeners
     if (searchInput) {
         searchInput.addEventListener('input', filterEmployees);
     }
 
-    // Optional: Add animation when cards appear
-    employeeCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
+    if (roleFilter) {
+        roleFilter.addEventListener('change', filterEmployees);
+    }
 
-        setTimeout(() => {
-            card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, index * 50);
-    });
+    if (statusFilter) {
+        statusFilter.addEventListener('change', filterEmployees);
+    }
 });

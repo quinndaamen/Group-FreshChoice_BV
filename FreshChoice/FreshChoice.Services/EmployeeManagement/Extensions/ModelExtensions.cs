@@ -12,5 +12,8 @@ public static class ModelExtensions
             FirstName = employee.FirstName,
             LastName = employee.LastName,
             Email = employee.Email,
+            WagePerHour = employee.WagePerHour,
+            PhoneNumber = employee.PhoneNumber,
+            HireDate = DateTime.SpecifyKind(employee.HireDate, DateTimeKind.Utc),
         };
 }

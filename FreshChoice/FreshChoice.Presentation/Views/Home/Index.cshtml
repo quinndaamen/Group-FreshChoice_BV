@@ -5,72 +5,51 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; font-family: Arial, sans-serif;">
+<link rel="stylesheet" href="~/css/home.css" />
 
-    <!-- Header -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #E0E0E0;">
-        <!-- Add logo or nav items here if needed -->
+<div class="home-container">
+    <!-- Header Section -->
+    <div class="page-header">
+        <div>
+            <h1>Announcements</h1>
+            <p>Recent company updates</p>
+        </div>
+        <a asp-controller="Announcement" asp-action="Create" class="create-btn">
+            <i class="bi bi-plus-lg"></i>
+            Create New Announcement
+        </a>
     </div>
 
-    <!-- Announcements Section -->
-    <div style="margin-bottom: 32px;">
-        <h1 style="color: #333333; font-size: 28px; font-weight: 700; margin-bottom: 8px;">Announcements</h1>
-        <p style="color: #666666; font-size: 16px;">Recent company updates</p>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-        @foreach (var ann in Model)
+    <!-- Announcements Grid -->
+    <div class="announcements-grid">
+        @if (Model != null && Model.Any())
         {
-            <div style="background: white; border: 1px solid #E0E0E0; border-radius: 8px; padding: 24px;">
-                <div style="color: #2E7D32; font-size: 14px; font-weight: 600; margin-bottom: 8px;">
-                    @ann.Date.ToString("MMM dd, yyyy")
+            @foreach (var ann in Model)
+            {
+                <div class="announcement-card">
+                    <!-- Delete Button -->
+                    <form asp-controller="Announcement" asp-action="Delete" asp-route-id="@ann.Id" method="post" style="display: inline;">
+                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this announcement?');">
+                            <i class="bi bi-trash"></i>
+                            Delete
+                        </button>
+                    </form>
+
+                    <div class="announcement-date">
+                        <i class="bi bi-calendar3"></i>
+                        @ann.Date.ToString("MMM dd, yyyy")
+                    </div>
+                    <h3 class="announcement-title">@ann.Name</h3>
+                    <p class="announcement-text">@ann.Text</p>
                 </div>
-
-                <h3 style="color: #333333; font-size: 20px; font-weight: 700; margin-bottom: 12px;">
-                    @ann.Name
-                </h3>
-
-                <p style="color: #666666; font-size: 15px; line-height: 1.6;">
-                    @ann.Text
-                </p>
+            }
+        }
+        else
+        {
+            <div class="alert">
+                <i class="bi bi-info-circle"></i>
+                <span>No announcements found. Click "Create New Announcement" to get started.</span>
             </div>
         }
     </div>
-
-    <!-- Create New Announcement Button -->
-    <a href="/Announcement/Create">
-        <button style="background: #2E7D32; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 32px;">
-            Create New Announcement
-        </button>
-    </a>
-
-    <!-- Additional Announcement -->
-    <div style="background: white; border: 1px solid #E0E0E0; border-radius: 8px; padding: 24px; margin-top: 32px;">
-        <div style="color: #2E7D32; font-size: 14px; font-weight: 600; margin-bottom: 8px;">Oct 30, 2025</div>
-        <h3 style="color: #333333; font-size: 20px; font-weight: 700; margin-bottom: 12px;">New Product Lines Available</h3>
-        <p style="color: #666666; font-size: 15px; line-height: 1.6;">
-            We're excited to introduce our new organic and locally-sourced product lines in all departments.
-        </p>
-    </div>
-
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const logoContainer = document.getElementById('logoContainer');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-
-        if (logoContainer && dropdownMenu) {
-            logoContainer.addEventListener('mouseenter', () => dropdownMenu.style.display = 'block');
-            logoContainer.addEventListener('mouseleave', () => dropdownMenu.style.display = 'none');
-
-            dropdownMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', e => {
-                    e.preventDefault();
-                    alert('Navigating to: ' + link.textContent);
-                });
-            });
-        }
-    });
-</script>
-
